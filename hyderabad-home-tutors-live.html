@@ -1,0 +1,1411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<meta name="description" content="Hyderabad Home Tutors — find verified home tutors in Hyderabad, Sindh by subject, class and area. Free for parents and tutors." />
+<link rel="icon" href="data:," />
+<title>Hyderabad Home Tutors — Verified Home Tutors in Hyderabad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Libre+Franklin:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  :root{
+    color-scheme: light dark;
+    --emerald-950:#04241a; --emerald-900:#06392a; --emerald-800:#07503a; --emerald-700:#0a6a4c;
+    --emerald-600:#0d8560; --emerald-100:#dcf2e8; --emerald-50:#eef8f3;
+    --gold:#c9a227; --gold-bright:#e7c65a; --gold-soft:#f6ead0;
+    --bg:#f7f5ef; --surface:#ffffff; --surface-2:#f1eee4; --ink:#17251f; --ink-soft:#48584f;
+    --line:#ddd8c8; --danger:#b3261e; --ok:#0a6a4c;
+    --shadow:0 10px 30px rgba(4,36,26,.10);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0c1512; --surface:#14211c; --surface-2:#1a2a23; --ink:#eef3ef; --ink-soft:#b3c2b8;
+      --line:#2b3d34; --gold-soft:#3a3013; --emerald-50:#12271f; --emerald-100:#1c3a2f;
+      --shadow:0 10px 30px rgba(0,0,0,.45);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:"Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+  h1,h2,h3,.serif{font-family:"Newsreader",Georgia,serif;font-weight:600;line-height:1.15;margin:0}
+  a{color:var(--emerald-700)}
+  @media (prefers-color-scheme: dark){ a{color:var(--gold-bright)} }
+  button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:2.25rem}
+  button{font:inherit;cursor:pointer}
+  input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.55rem .7rem;width:100%}
+  textarea{resize:vertical}
+  label{font-weight:600;font-size:.9rem;display:block;margin-bottom:.3rem}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 1rem}
+  /* ---------- header ---------- */
+  header.site{position:sticky;top:0;z-index:60;background:var(--emerald-950);color:#f4f1e6;box-shadow:0 2px 14px rgba(0,0,0,.25)}
+  .site-in{display:flex;align-items:center;gap:.6rem;padding:.55rem 0;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:#f4f1e6;margin-right:auto}
+  .brand-mark{width:40px;height:40px;border-radius:10px;background:var(--gold);color:var(--emerald-950);display:grid;place-items:center;font-family:"Newsreader",serif;font-weight:700;font-size:1.15rem;flex:none}
+  .brand b{font-family:"Newsreader",serif;font-size:1.12rem;display:block;line-height:1.1}
+  .brand span{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold-bright)}
+  nav.main{display:flex;gap:.25rem;flex-wrap:wrap;align-items:center}
+  nav.main a{color:#f4f1e6;text-decoration:none;padding:.5rem .7rem;border-radius:8px;font-weight:600;font-size:.92rem;min-height:2.25rem;display:inline-flex;align-items:center}
+  nav.main a:hover,nav.main a.active{background:rgba(255,255,255,.12)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;border:1px solid transparent;border-radius:10px;padding:.55rem 1rem;font-weight:700;text-decoration:none;min-height:2.5rem;font-size:.95rem}
+  .btn-gold{background:var(--gold);color:#231a02}
+  .btn-gold:hover{background:var(--gold-bright)}
+  .btn-emerald{background:var(--emerald-700);color:#fff}
+  .btn-emerald:hover{background:var(--emerald-600)}
+  .btn-ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+  .btn-ghost:hover{border-color:var(--gold)}
+  .btn-light{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.35)}
+  .btn-sm{padding:.35rem .7rem;min-height:2.25rem;font-size:.85rem}
+  .btn-danger{background:transparent;border-color:var(--danger);color:var(--danger)}
+  /* ---------- hero ---------- */
+  .hero{background:linear-gradient(160deg,var(--emerald-950) 0%,var(--emerald-900) 55%,var(--emerald-800) 100%);color:#f7f4ea;padding:2.6rem 0 2.2rem;border-bottom:4px solid var(--gold)}
+  .hero h1{font-size:clamp(1.9rem,5vw,3rem);color:#fdfbf4;max-width:16em}
+  .hero h1 em{font-style:normal;color:var(--gold-bright)}
+  .hero p.lede{color:#dfe9e1;max-width:38em;font-size:1.05rem;margin:.8rem 0 0}
+  .hero-stats{display:flex;gap:1.6rem;flex-wrap:wrap;margin-top:1.4rem}
+  .hero-stats div b{display:block;font-size:1.35rem;color:#fff;font-family:"Newsreader",serif}
+  .hero-stats div span{font-size:.8rem;color:#cfe0d4;letter-spacing:.04em}
+  .search-card{background:var(--surface);color:var(--ink);border-radius:var(--radius);box-shadow:var(--shadow);padding:1rem;margin-top:1.6rem}
+  .search-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.7rem;align-items:end}
+  .search-actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.8rem;align-items:center}
+  .loc-note{font-size:.88rem;color:var(--ink-soft)}
+  /* ---------- sections ---------- */
+  section.block{padding:2.2rem 0 .4rem}
+  .sec-head{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+  .sec-head h2{font-size:1.65rem}
+  .sec-head p{color:var(--ink-soft);margin:0}
+  .area-chips{display:flex;gap:.5rem;flex-wrap:wrap}
+  .chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:.45rem .85rem;font-weight:600;font-size:.88rem;display:inline-flex;gap:.45rem;align-items:center;min-height:2.25rem}
+  .chip:hover{border-color:var(--gold)}
+  .chip.on{background:var(--emerald-700);color:#fff;border-color:var(--emerald-700)}
+  .chip .n{background:var(--gold-soft);color:#6b5410;border-radius:999px;padding:0 .45rem;font-size:.75rem;font-weight:800}
+  .chip.on .n{background:rgba(255,255,255,.25);color:#fff}
+  #map{height:340px;border-radius:var(--radius);border:1px solid var(--line);z-index:1}
+  .map-fallback{padding:1rem;background:var(--surface-2);border-radius:var(--radius);color:var(--ink-soft)}
+  /* ---------- tutor cards ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.1rem;box-shadow:0 2px 10px rgba(4,36,26,.05);display:flex;flex-direction:column;gap:.55rem}
+  .card-top{display:flex;gap:.8rem;align-items:flex-start}
+  .avatar{width:52px;height:52px;border-radius:50%;background:var(--emerald-800);color:var(--gold-bright);display:grid;place-items:center;font-family:"Newsreader",serif;font-size:1.25rem;font-weight:700;flex:none}
+  .card h3{font-size:1.2rem}
+  .meta{color:var(--ink-soft);font-size:.88rem}
+  .tags{display:flex;gap:.35rem;flex-wrap:wrap}
+  .tag{background:var(--emerald-50);border:1px solid var(--emerald-100);color:var(--emerald-800);border-radius:999px;padding:.12rem .55rem;font-size:.78rem;font-weight:600}
+  @media (prefers-color-scheme: dark){ .tag{color:var(--gold-bright)} }
+  .badge{display:inline-flex;align-items:center;gap:.3rem;border-radius:999px;padding:.18rem .6rem;font-size:.76rem;font-weight:800}
+  .badge-verified{background:var(--gold);color:#231a02}
+  .badge-dist{background:var(--surface-2);border:1px solid var(--line);color:var(--ink-soft)}
+  .badge-status{background:var(--surface-2);border:1px solid var(--line)}
+  .st-new{color:#8a5a00}.st-contacted{color:#0b5cad}.st-matched{color:var(--ok)}.st-closed{color:var(--ink-soft)}
+  .fee{font-weight:800}
+  .fee small{font-weight:500;color:var(--ink-soft)}
+  .card .spacer{flex:1}
+  .stars{color:var(--gold);letter-spacing:.1em;font-size:.95rem}
+  .stars .off{color:var(--line)}
+  /* ---------- steps ---------- */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;counter-reset:step}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem}
+  .step .num{width:34px;height:34px;border-radius:50%;background:var(--emerald-700);color:#fff;display:grid;place-items:center;font-weight:800;margin-bottom:.5rem}
+  .step h3{font-size:1.05rem;margin-bottom:.3rem}
+  .step p{margin:0;color:var(--ink-soft);font-size:.92rem}
+  /* ---------- ads ---------- */
+  .ad-slot{border:1.5px dashed var(--gold);background:var(--gold-soft);border-radius:var(--radius);padding:1rem 1.2rem;text-align:center;margin:1.6rem 0 .4rem}
+  .ad-slot .ad-kicker{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#8a6d1c;font-weight:800}
+  .ad-slot .ad-body{font-family:"Newsreader",serif;font-size:1.15rem;color:#4a3a05}
+  .ad-slot a{font-weight:700}
+  @media (prefers-color-scheme: dark){ .ad-slot .ad-body{color:var(--gold-bright)} .ad-slot .ad-kicker{color:var(--gold)} }
+  /* ---------- reviews ---------- */
+  .review{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem}
+  .review p{margin:.35rem 0 0}
+  /* ---------- forms / panels ---------- */
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.2rem;box-shadow:0 2px 10px rgba(4,36,26,.05)}
+  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.9rem}
+  .form-grid .full{grid-column:1/-1}
+  .tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
+  .tabs button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:.45rem .95rem;font-weight:700;min-height:2.5rem}
+  .tabs button.on{background:var(--emerald-700);color:#fff;border-color:var(--emerald-700)}
+  .msg{border-radius:10px;padding:.7rem .9rem;font-size:.92rem;margin:.7rem 0;display:none}
+  .msg.show{display:block}
+  .msg.err{background:#fdeceb;color:#7a130d;border:1px solid #f3c1bd}
+  .msg.ok{background:var(--emerald-50);color:var(--emerald-800);border:1px solid var(--emerald-100)}
+  @media (prefers-color-scheme: dark){ .msg.err{background:#3d1512;color:#ffb4ab} .msg.ok{color:#a7e8cd} }
+  table.tbl{width:100%;border-collapse:collapse;font-size:.92rem}
+  table.tbl th,table.tbl td{padding:.55rem .6rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  table.tbl th{font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft)}
+  .stack{display:grid;gap:1rem}
+  .rowline{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
+  .muted{color:var(--ink-soft)}
+  .small{font-size:.86rem}
+  dialog{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);color:var(--ink);max-width:520px;width:calc(100% - 2rem);padding:1.3rem;box-shadow:var(--shadow)}
+  dialog::backdrop{background:rgba(4,36,26,.55)}
+  pre.rules{background:var(--emerald-950);color:#d9ecd9;border-radius:var(--radius);padding:1rem;overflow:auto;font-size:.78rem;line-height:1.5;max-height:480px;white-space:pre}
+  footer.site{margin-top:3rem;background:var(--emerald-950);color:#cfdccf;padding:2rem 0 2.4rem;border-top:4px solid var(--gold)}
+  footer.site a{color:var(--gold-bright)}
+  footer.site .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.4rem}
+  footer.site h3{color:#fff;font-size:1.05rem;margin-bottom:.5rem}
+  footer.site p,footer.site li{font-size:.9rem}
+  footer.site ul{list-style:none;margin:0;padding:0;display:grid;gap:.35rem}
+  .hidden{display:none !important}
+  .rate-input{display:flex;gap:.3rem;font-size:1.5rem}
+  .rate-input button{background:none;border:none;color:var(--line);padding:.2rem;min-height:2.25rem}
+  .rate-input button.lit{color:var(--gold)}
+  @media (max-width:640px){ .hero{padding:1.8rem 0 1.6rem} #map{height:280px} }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap site-in">
+    <a class="brand" href="#/">
+      <span class="brand-mark">H</span>
+      <span><b>Hyderabad Home Tutors</b><span>Verified · Hyderabad, Sindh</span></span>
+    </a>
+    <nav class="main" aria-label="Main">
+      <a href="#/" data-nav="home">Find a Tutor</a>
+      <a href="#/teach" data-nav="teach">Teach With Us</a>
+      <a href="#/account" data-nav="account">My Account</a>
+      <span id="authArea"></span>
+    </nav>
+  </div>
+</header>
+
+<!-- ======================= HOME VIEW ======================= -->
+<div id="view-home">
+  <div class="hero">
+    <div class="wrap">
+      <h1>Verified home tutors in Hyderabad, <em>matched to your area.</em></h1>
+      <p class="lede">Every tutor on this platform passes a 5-step verification before a single lesson is booked. Search by subject, class and neighbourhood — the tutors nearest to your home come first. Free for parents and tutors, always.</p>
+      <div class="hero-stats">
+        <div><b id="statTutors">1</b><span>Verified tutors live</span></div>
+        <div><b>5-step</b><span>Verification process</span></div>
+        <div><b>Rs 0</b><span>Fee for parents &amp; tutors</span></div>
+        <div><b>14+</b><span>Areas covered</span></div>
+      </div>
+      <div class="search-card" role="search">
+        <div class="search-grid">
+          <div>
+            <label for="fSubject">Subject</label>
+            <select id="fSubject"><option value="">All subjects</option></select>
+          </div>
+          <div>
+            <label for="fClass">Class / level</label>
+            <select id="fClass"><option value="">All classes</option></select>
+          </div>
+          <div>
+            <label for="fArea">Area</label>
+            <select id="fArea"><option value="">All areas</option></select>
+          </div>
+          <div>
+            <label for="fQuery">Search by name or keyword</label>
+            <input id="fQuery" type="search" placeholder="e.g. Computer Science" />
+          </div>
+        </div>
+        <div class="search-actions">
+          <button class="btn btn-emerald" id="btnSearch" type="button">Search tutors</button>
+          <button class="btn btn-ghost" id="btnLocate" type="button">◎ Use my current location</button>
+          <span class="loc-note" id="locNote">Tutors are sorted nearest-first once your area or location is set.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="ad-slot" data-ad-slot="top"></div>
+
+    <section class="block" id="areas">
+      <div class="sec-head"><h2>Browse by area</h2><p>Tap an area to see its tutors first.</p></div>
+      <div class="area-chips" id="areaChips"></div>
+    </section>
+
+    <section class="block" id="mapSection">
+      <div class="sec-head"><h2>Tutors on the map</h2><p>Pins show each verified tutor's base area.</p></div>
+      <div id="map"></div>
+    </section>
+
+    <section class="block" id="results">
+      <div class="sec-head"><h2 id="resultsTitle">Verified tutors</h2><p id="resultsSub"></p></div>
+      <div class="grid" id="tutorGrid"></div>
+      <p class="muted" id="noResults" style="display:none">No verified tutors match that search yet. Try another subject or area — new tutors are being verified every week.</p>
+    </section>
+
+    <div class="ad-slot" data-ad-slot="mid"></div>
+
+    <section class="block" id="how">
+      <div class="sec-head"><h2>How it works</h2></div>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><h3>Search &amp; compare</h3><p>Filter verified tutors by subject, class and area. The nearest tutors to your home appear first, with their distance shown.</p></div>
+        <div class="step"><div class="num">2</div><h3>Create your free account</h3><p>Parents sign up free and send a tuition request to the tutor they like — no advance payment, no platform fee.</p></div>
+        <div class="step"><div class="num">3</div><h3>Get matched</h3><p>Track your request in “My Account” as it moves from New to Contacted to Matched, and fix the first lesson directly with your tutor.</p></div>
+      </div>
+    </section>
+
+    <section class="block" id="verification">
+      <div class="sec-head"><h2>Our 5-step verification</h2><p>No tutor is listed until all five steps are complete.</p></div>
+      <div class="steps">
+        <div class="step"><div class="num">1</div><h3>Identity check</h3><p>CNIC and a recent photograph are collected and matched against the tutor's application.</p></div>
+        <div class="step"><div class="num">2</div><h3>Qualification check</h3><p>Degrees, transcripts and certificates are reviewed against the subjects the tutor wants to teach.</p></div>
+        <div class="step"><div class="num">3</div><h3>Interview</h3><p>A short interview confirms teaching ability, communication and the classes the tutor can handle.</p></div>
+        <div class="step"><div class="num">4</div><h3>Trial lesson review</h3><p>The tutor's first lesson feedback is reviewed before the profile stays public.</p></div>
+        <div class="step"><div class="num">5</div><h3>Ongoing parent reviews</h3><p>Verified parents rate every tutor. Ratings are moderated, and tutors who fall short are removed.</p></div>
+      </div>
+    </section>
+
+    <section class="block" id="reviews">
+      <div class="sec-head"><h2>What parents &amp; students say</h2><p>Reviews appear here only after moderation.</p></div>
+      <div class="grid" id="reviewGrid"></div>
+      <p class="muted" id="noReviews" style="display:none">No published reviews yet — be the first to review your tutor.</p>
+      <div class="panel" style="margin-top:1rem">
+        <h3 style="margin-bottom:.6rem">Write a review</h3>
+        <div class="msg" id="reviewMsg"></div>
+        <form id="reviewForm">
+          <div class="form-grid">
+            <div>
+              <label for="rvTutor">Tutor</label>
+              <select id="rvTutor" required></select>
+            </div>
+            <div>
+              <label>Your rating</label>
+              <div class="rate-input" id="rvStars" role="radiogroup" aria-label="Star rating"></div>
+            </div>
+            <div class="full">
+              <label for="rvText">Your review</label>
+              <textarea id="rvText" rows="3" required placeholder="How were the lessons? Punctuality, teaching style, results…"></textarea>
+            </div>
+          </div>
+          <div style="margin-top:.8rem"><button class="btn btn-emerald" type="submit">Submit review for moderation</button></div>
+        </form>
+      </div>
+    </section>
+
+    <section class="block" id="teachCta">
+      <div class="panel" style="display:flex;gap:1rem;flex-wrap:wrap;align-items:center;justify-content:space-between">
+        <div>
+          <h2 style="font-size:1.4rem">Are you a tutor?</h2>
+          <p class="muted" style="margin:.3rem 0 0">Join free, get verified once, and receive student requests from your own area.</p>
+        </div>
+        <a class="btn btn-gold" href="#/teach">Apply as a tutor</a>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ======================= TEACH VIEW ======================= -->
+<div id="view-teach" class="hidden">
+  <div class="wrap" style="padding-top:2rem">
+    <h2 style="font-size:1.9rem">Teach with Hyderabad Home Tutors</h2>
+    <p class="muted" style="max-width:44em">Tutor accounts are free. Create a tutor account, complete your professional profile below, and our team runs the 5-step verification. Your listing goes public only after approval — you can watch the status here and in My Account.</p>
+    <div class="panel" style="margin-top:1rem">
+      <h3 style="margin-bottom:.6rem">Tutor application &amp; professional profile</h3>
+      <div class="msg" id="teachMsg"></div>
+      <div id="teachGate" class="muted">Checking your account…</div>
+      <form id="teachForm" class="hidden">
+        <div class="form-grid">
+          <div><label for="tName">Full name</label><input id="tName" required /></div>
+          <div><label for="tPhone">Phone / WhatsApp</label><input id="tPhone" required placeholder="03xx-xxxxxxx" /></div>
+          <div><label for="tArea">Base area (where you teach from)</label><select id="tArea" required></select></div>
+          <div><label for="tFee">Monthly fee (Rs) — per student</label><input id="tFee" type="number" min="0" step="100" required placeholder="e.g. 8000" /></div>
+          <div class="full"><label for="tSubjects">Subjects (comma separated)</label><input id="tSubjects" required placeholder="e.g. Computer Science, Mathematics" /></div>
+          <div class="full"><label for="tClasses">Classes / levels (comma separated)</label><input id="tClasses" required placeholder="e.g. Class 9, Class 10, Intermediate, BS level" /></div>
+          <div><label for="tQual">Qualification</label><input id="tQual" required placeholder="e.g. BS Computer Science (in progress), GCUH" /></div>
+          <div><label for="tExp">Experience</label><input id="tExp" required placeholder="e.g. 2 years home tuition" /></div>
+          <div class="full"><label for="tBio">Short bio</label><textarea id="tBio" rows="3" placeholder="Your teaching style, results, languages…"></textarea></div>
+        </div>
+        <div class="rowline" style="margin-top:.9rem">
+          <button class="btn btn-emerald" type="submit">Save application</button>
+          <span class="badge badge-status" id="teachStatus"></span>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= ACCOUNT VIEW ======================= -->
+<div id="view-account" class="hidden">
+  <div class="wrap" style="padding-top:2rem">
+    <h2 style="font-size:1.9rem">My Account</h2>
+    <div class="msg" id="acctMsg"></div>
+
+    <div id="authPanel" class="panel" style="max-width:560px;margin-top:1rem">
+      <div class="tabs" role="tablist">
+        <button type="button" id="tabLogin" class="on">Sign in</button>
+        <button type="button" id="tabRegister">Create free account</button>
+      </div>
+      <form id="loginForm">
+        <div class="stack" style="gap:.7rem">
+          <div><label for="liEmail">Email</label><input id="liEmail" type="email" required autocomplete="email" /></div>
+          <div><label for="liPass">Password</label><input id="liPass" type="password" required autocomplete="current-password" /></div>
+          <button class="btn btn-emerald" type="submit">Sign in</button>
+        </div>
+      </form>
+      <form id="registerForm" class="hidden">
+        <div class="stack" style="gap:.7rem">
+          <div><label for="rgName">Full name</label><input id="rgName" required autocomplete="name" /></div>
+          <div><label for="rgEmail">Email</label><input id="rgEmail" type="email" required autocomplete="email" /></div>
+          <div><label for="rgPass">Password (6+ characters)</label><input id="rgPass" type="password" required minlength="6" autocomplete="new-password" /></div>
+          <div>
+            <label for="rgRole">I am joining as</label>
+            <select id="rgRole">
+              <option value="parent">Parent / Student — find a tutor (free)</option>
+              <option value="tutor">Tutor — teach students (free)</option>
+            </select>
+          </div>
+          <button class="btn btn-gold" type="submit">Create my free account</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="dashPanel" class="hidden" style="margin-top:1rem">
+      <div class="panel">
+        <div class="rowline" style="justify-content:space-between">
+          <div><h3 id="dashName"></h3><p class="muted small" id="dashRole" style="margin:.2rem 0 0"></p></div>
+          <button class="btn btn-ghost btn-sm" id="btnSignOut2" type="button">Sign out</button>
+        </div>
+      </div>
+      <div id="parentDash" class="hidden" style="margin-top:1rem">
+        <div class="sec-head"><h2 style="font-size:1.35rem">My tuition requests</h2></div>
+        <div class="stack" id="myRequests"></div>
+        <p class="muted" id="noRequests" style="display:none">You have not sent any requests yet. <a href="#/">Find a tutor</a> and tap “Request this tutor”.</p>
+      </div>
+      <div id="tutorDash" class="hidden" style="margin-top:1rem">
+        <div class="panel">
+          <h3 style="margin-bottom:.4rem">My tutor application</h3>
+          <p id="tutorDashBody" class="muted" style="margin:0"></p>
+          <div style="margin-top:.7rem"><a class="btn btn-emerald btn-sm" href="#/teach">Open my application</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= ADMIN VIEW (private route #/admin — not linked in public UI) ======================= -->
+<div id="view-admin" class="hidden">
+  <div class="wrap" style="padding-top:2rem">
+    <h2 style="font-size:1.9rem">Admin Panel</h2>
+    <p class="muted">Private owner &amp; team area. Access is controlled by the <b>admins</b> list in the database — signing in with a normal parent or tutor account will not open this panel.</p>
+    <div class="msg" id="adminMsg"></div>
+
+    <div id="adminGate" class="panel" style="max-width:560px;margin-top:1rem">
+      <div id="adminSetupBox" class="hidden">
+        <h3 style="margin-bottom:.4rem">One-time owner setup</h3>
+        <p class="small muted">No admin account exists yet. Create the owner account once — after this, setup closes and only admins can add more admins.</p>
+        <form id="adminSetupForm">
+          <div class="stack" style="gap:.7rem">
+            <div><label for="asName">Owner name</label><input id="asName" required /></div>
+            <div><label for="asEmail">Owner email</label><input id="asEmail" type="email" required /></div>
+            <div><label for="asPass">Password (6+ characters)</label><input id="asPass" type="password" required minlength="6" /></div>
+            <button class="btn btn-gold" type="submit">Create owner admin account</button>
+          </div>
+        </form>
+        <hr style="border:none;border-top:1px solid var(--line);margin:1.1rem 0" />
+      </div>
+      <h3 style="margin-bottom:.6rem">Admin sign in</h3>
+      <form id="adminLoginForm">
+        <div class="stack" style="gap:.7rem">
+          <div><label for="adEmail">Email</label><input id="adEmail" type="email" required /></div>
+          <div><label for="adPass">Password</label><input id="adPass" type="password" required /></div>
+          <button class="btn btn-emerald" type="submit">Sign in to Admin</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="adminPanel" class="hidden" style="margin-top:1rem">
+      <div class="tabs" id="adminTabs">
+        <button type="button" data-atab="overview" class="on">Overview &amp; Earnings</button>
+        <button type="button" data-atab="tutors">Tutors</button>
+        <button type="button" data-atab="requests">Requests</button>
+        <button type="button" data-atab="reviews">Reviews</button>
+        <button type="button" data-atab="settings">Settings &amp; Ads</button>
+        <button type="button" data-atab="rules">Database Rules</button>
+      </div>
+
+      <div data-apane="overview">
+        <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr))">
+          <div class="card"><h3 id="ovTutors">–</h3><p class="meta">Approved tutors</p></div>
+          <div class="card"><h3 id="ovPending">–</h3><p class="meta">Tutors awaiting verification</p></div>
+          <div class="card"><h3 id="ovRequests">–</h3><p class="meta">Total tuition requests</p></div>
+          <div class="card"><h3 id="ovReviews">–</h3><p class="meta">Reviews awaiting moderation</p></div>
+        </div>
+        <div class="panel" style="margin-top:1rem">
+          <h3 style="margin-bottom:.4rem">Earnings</h3>
+          <p class="small muted" id="earnSummary" style="margin-top:0"></p>
+          <div style="overflow-x:auto"><table class="tbl" id="earnTable">
+            <thead><tr><th>Request</th><th>Tutor</th><th>Monthly fee</th><th>Platform fee</th><th>Status</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table></div>
+          <p class="muted small" id="earnEmpty" style="display:none">No matched requests yet, so no platform-fee earnings to show.</p>
+        </div>
+      </div>
+
+      <div data-apane="tutors" class="hidden">
+        <div class="panel"><div style="overflow-x:auto"><table class="tbl" id="adminTutorsTable">
+          <thead><tr><th>Tutor</th><th>Subjects</th><th>Base area</th><th>Fee / month</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody>
+        </table></div></div>
+      </div>
+
+      <div data-apane="requests" class="hidden">
+        <div class="panel"><div style="overflow-x:auto"><table class="tbl" id="adminRequestsTable">
+          <thead><tr><th>Parent</th><th>Tutor</th><th>Class · Subject</th><th>Message</th><th>Status</th><th></th></tr></thead><tbody></tbody>
+        </table></div></div>
+      </div>
+
+      <div data-apane="reviews" class="hidden">
+        <div class="panel"><div style="overflow-x:auto"><table class="tbl" id="adminReviewsTable">
+          <thead><tr><th>Review</th><th>Tutor</th><th>Rating</th><th>Published</th><th>Actions</th></tr></thead><tbody></tbody>
+        </table></div></div>
+      </div>
+
+      <div data-apane="settings" class="hidden">
+        <form id="settingsForm" class="panel">
+          <h3 style="margin-bottom:.6rem">Ad slots</h3>
+          <p class="small muted" style="margin-top:0">Ads are how the platform earns while parents and tutors stay free. Leave a slot's text empty and the site shows that space as “available” to advertisers.</p>
+          <div class="form-grid">
+            <div><label for="adTopText">Top slot — headline</label><input id="adTopText" placeholder="e.g. City Book Centre — 20% off course books" /></div>
+            <div><label for="adTopLink">Top slot — link (optional)</label><input id="adTopLink" type="url" placeholder="https://…" /></div>
+            <div><label for="adMidText">Middle slot — headline</label><input id="adMidText" placeholder="e.g. Bright Academy admissions open" /></div>
+            <div><label for="adMidLink">Middle slot — link (optional)</label><input id="adMidLink" type="url" placeholder="https://…" /></div>
+          </div>
+          <hr style="border:none;border-top:1px solid var(--line);margin:1.2rem 0" />
+          <h3 style="margin-bottom:.6rem">Platform fee (optional)</h3>
+          <div class="form-grid">
+            <div>
+              <label for="feeEnabled">Platform fee</label>
+              <select id="feeEnabled"><option value="off">OFF — platform stays fully free (ads only)</option><option value="on">ON — charge % of first month</option></select>
+            </div>
+            <div><label for="feePercent">Fee % of tutor's first-month fee</label><input id="feePercent" type="number" min="0" max="50" step="1" value="10" /></div>
+          </div>
+          <div style="margin-top:1rem"><button class="btn btn-emerald" type="submit">Save settings</button></div>
+        </form>
+      </div>
+
+      <div data-apane="rules" class="hidden">
+        <div class="panel">
+          <h3 style="margin-bottom:.4rem">Firestore security rules</h3>
+          <p class="small muted">The database was created with locked (deny-all) rules. Paste these rules in Firebase Console → Firestore Database → Rules → Publish to switch the platform on: approved tutors and reviews become publicly readable, parents and tutors can write only their own records, and only admins can approve anything or change settings.</p>
+          <pre class="rules" id="rulesText"></pre>
+          <div class="rowline" style="margin-top:.8rem">
+            <button class="btn btn-gold btn-sm" type="button" id="btnCopyRules">Copy rules</button>
+            <button class="btn btn-ghost btn-sm" type="button" id="btnDlRules">Download firestore.rules</button>
+            <button class="btn btn-ghost btn-sm" type="button" id="btnDlSite">Download this site (index.html)</button>
+          </div>
+          <p class="small muted">Deploy: put this single <b>index.html</b> in a GitHub repository, enable GitHub Pages, and point the custom domain <b>hyderabadhometutors.tech</b> at it (CNAME file + DNS). No build step and no server are needed — the page talks directly to Firebase.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= REQUEST MODAL ======================= -->
+<dialog id="reqDialog">
+  <h3 id="reqTitle" style="margin-bottom:.4rem">Request this tutor</h3>
+  <p class="muted small" id="reqSub" style="margin-top:0"></p>
+  <div class="msg" id="reqMsg"></div>
+  <form id="reqForm" method="dialog">
+    <div class="stack" style="gap:.7rem">
+      <div><label for="rqClass">Student's class</label><input id="rqClass" required placeholder="e.g. Class 10" /></div>
+      <div><label for="rqSubject">Subject needed</label><input id="rqSubject" required placeholder="e.g. Computer Science" /></div>
+      <div><label for="rqPhone">Your phone / WhatsApp</label><input id="rqPhone" required placeholder="03xx-xxxxxxx" /></div>
+      <div><label for="rqMsg">Message for the tutor</label><textarea id="rqMsg" rows="3" placeholder="Timings, days per week, any detail that helps…"></textarea></div>
+      <div class="rowline">
+        <button class="btn btn-emerald" type="submit" id="reqSend">Send request</button>
+        <button class="btn btn-ghost" type="button" id="reqCancel">Cancel</button>
+      </div>
+    </div>
+  </form>
+</dialog>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <h3>Hyderabad Home Tutors</h3>
+        <p>Verified home tuition for Hyderabad, Sindh. Every tutor passes identity, qualification, interview, trial-lesson and review checks before teaching your child.</p>
+      </div>
+      <div>
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="#/">Find a tutor</a></li>
+          <li><a href="#/teach">Teach with us</a></li>
+          <li><a href="#/account">My account</a></li>
+          <li><a href="#/#how">How it works</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Popular areas</h3>
+        <ul>
+          <li>Qasimabad · Latifabad · Saddar</li>
+          <li>Hirabad · Auto Bhan Road</li>
+          <li>Gulistan-e-Sajjad · Naseem Nagar</li>
+          <li>Jamshoro · Kotri · Tando Jam</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Good to know</h3>
+        <ul>
+          <li>Free for parents and tutors</li>
+          <li>Platform earning comes from ads</li>
+          <li>Reviews are moderated before publishing</li>
+        </ul>
+      </div>
+    </div>
+    <p class="small" style="margin-top:1.6rem;color:#9db8a6">© 2026 Hyderabad Home Tutors · Hyderabad, Sindh, Pakistan</p>
+  </div>
+</footer>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+"use strict";
+/* ================= Firebase config (public web client config) ================= */
+var firebaseConfig = {
+  apiKey: "AIzaSyARfkAHqRa_O4cRhtqnMhAk5OEf7z1gYH4",
+  authDomain: "hyderabad-home-tutors.firebaseapp.com",
+  projectId: "hyderabad-home-tutors",
+  storageBucket: "hyderabad-home-tutors.firebasestorage.app",
+  messagingSenderId: "368005681772",
+  appId: "1:368005681772:web:5953d5f902bb9ec8dcbe49"
+};
+
+/* ================= Static reference data ================= */
+var AREAS = [
+  {name:"Qasimabad", lat:25.3735, lng:68.3150},
+  {name:"Latifabad", lat:25.3660, lng:68.3560},
+  {name:"Saddar", lat:25.3960, lng:68.3360},
+  {name:"Hirabad", lat:25.4030, lng:68.3500},
+  {name:"Auto Bhan Road", lat:25.3830, lng:68.3600},
+  {name:"Gulistan-e-Sajjad", lat:25.3580, lng:68.3020},
+  {name:"Naseem Nagar", lat:25.3640, lng:68.3250},
+  {name:"Citizen Colony", lat:25.3680, lng:68.3300},
+  {name:"Hyderabad Cantt", lat:25.3900, lng:68.3680},
+  {name:"Pretabad / Phuleli", lat:25.3800, lng:68.3450},
+  {name:"SITE Area", lat:25.3850, lng:68.3850},
+  {name:"Jamshoro", lat:25.4280, lng:68.2620},
+  {name:"Kotri", lat:25.3710, lng:68.2990},
+  {name:"Tando Jam", lat:25.4240, lng:68.5330}
+];
+function areaCoords(name){ for (var i=0;i<AREAS.length;i++) if (AREAS[i].name===name) return AREAS[i]; return null; }
+
+/* The founder listing is part of the launch content and is always shown,
+   even before the database rules are published. */
+var FOUNDER = {
+  id:"founder-saad", name:"Saad Rafique", founder:true,
+  subjects:["Computer Science"], classes:["Class 9","Class 10","Intermediate","BS level"],
+  area:"Qasimabad", lat:25.3735, lng:68.3150,
+  fee:6000, qualification:"BS Computer Science, GCU Hyderabad (4th semester)",
+  experience:"Freelancing & teaching since 2023",
+  bio:"Computer Science tutor for school, college and university students. Concept-based teaching with practical examples, notes and regular tests.",
+  status:"approved", ratingAvg:0, ratingCount:0
+};
+
+var SUBJECTS = ["Mathematics","Physics","Chemistry","Biology","Computer Science","English","Urdu","Sindhi","Pakistan Studies","Islamiat","Accounting","Economics","Statistics","General Science"];
+var CLASSES = ["Class 1","Class 2","Class 3","Class 4","Class 5","Class 6","Class 7","Class 8","Class 9","Class 10","Intermediate","BS level"];
+
+/* ================= State ================= */
+var db=null, auth=null, firebaseReady=false;
+var currentUser=null, currentProfile=null, currentIsAdmin=false;
+var tutorsData=[], reviewsData=[], settingsData={ adTop:{text:"",link:""}, adMid:{text:"",link:""}, feeEnabled:false, feePercent:10 };
+var userLoc=null, mapObj=null, mapMarkers=[];
+var reviewRating=0, requestTutorId=null;
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+function showMsg(id, text, ok){ var el=$(id); if(!el) return; el.textContent=text; el.className="msg show "+(ok?"ok":"err"); }
+function hideMsg(id){ var el=$(id); if(el){ el.className="msg"; el.textContent=""; } }
+function initials(name){ return String(name||"?").trim().split(/\s+/).slice(0,2).map(function(w){return w[0];}).join("").toUpperCase(); }
+function starsHtml(avg, count){
+  var full = Math.round(avg||0), out="";
+  for (var i=1;i<=5;i++) out += i<=full ? "★" : '<span class="off">★</span>';
+  return '<span class="stars">'+out+'</span>' + (count ? ' <span class="meta">'+Number(avg).toFixed(1)+' ('+count+' reviews)</span>' : ' <span class="meta">New tutor</span>');
+}
+function distKm(aLat,aLng,bLat,bLng){
+  var R=6371, dLat=(bLat-aLat)*Math.PI/180, dLng=(bLng-aLng)*Math.PI/180;
+  var x=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(aLat*Math.PI/180)*Math.cos(bLat*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));
+}
+function fmtRs(n){ return "Rs " + Number(n||0).toLocaleString("en-PK"); }
+
+/* ================= Firebase init ================= */
+try {
+  if (window.firebase && firebaseConfig.apiKey) {
+    firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.firestore();
+    firebaseReady = true;
+  }
+} catch(e){ firebaseReady=false; }
+
+function loadPublicData(){
+  renderTutors(); renderAreaChips(); renderReviews(); renderAds();
+  if (!firebaseReady || !db) return;
+  db.collection("tutors").where("status","==","approved").get()
+    .then(function(snap){
+      var list=[FOUNDER], seen={};
+      seen[FOUNDER.name.toLowerCase()]=true;
+      snap.forEach(function(doc){
+        var t=Object.assign({id:doc.id}, doc.data());
+        if (seen[String(t.name||"").toLowerCase()]) return;
+        seen[String(t.name||"").toLowerCase()]=true;
+        var c=areaCoords(t.area); if (c && (t.lat==null)){ t.lat=c.lat; t.lng=c.lng; }
+        list.push(t);
+      });
+      tutorsData=list; renderTutors(); renderAreaChips(); drawMap();
+    }).catch(function(){ /* rules not published yet — founder listing still shows */ });
+  db.collection("reviews").where("approved","==",true).get()
+    .then(function(snap){
+      reviewsData=[]; snap.forEach(function(doc){ reviewsData.push(Object.assign({id:doc.id}, doc.data())); });
+      renderReviews();
+    }).catch(function(){});
+  db.collection("settings").doc("main").get()
+    .then(function(doc){ if (doc.exists){ settingsData=Object.assign(settingsData, doc.data()); } renderAds(); })
+    .catch(function(){});
+}
+
+/* ================= Ads ================= */
+function renderAds(){
+  document.querySelectorAll("[data-ad-slot]").forEach(function(slot){
+    var key = slot.getAttribute("data-ad-slot")==="top" ? "adTop" : "adMid";
+    var ad = settingsData[key] || {};
+    if (ad.text){
+      slot.innerHTML = '<div class="ad-kicker">Advertisement</div><div class="ad-body">'+esc(ad.text)+'</div>' +
+        (ad.link ? '<div style="margin-top:.35rem"><a href="'+esc(ad.link)+'" target="_blank" rel="noopener sponsored">Visit advertiser →</a></div>' : '');
+    } else {
+      slot.innerHTML = '<div class="ad-kicker">Advertisement</div><div class="ad-body">This advertising space is available</div><div class="small muted">Reach hundreds of Hyderabad parents &amp; students here — contact Hyderabad Home Tutors to book this slot.</div>';
+    }
+  });
+}
+
+/* ================= Tutors: filters, list, map ================= */
+function fillSelect(el, items, firstLabel){
+  if (!el) return; var cur=el.value;
+  el.innerHTML = '<option value="">'+esc(firstLabel)+'</option>' + items.map(function(i){ return '<option value="'+esc(i)+'">'+esc(i)+'</option>'; }).join("");
+  el.value = cur;
+}
+function currentFilters(){
+  return { subject:$("fSubject").value, cls:$("fClass").value, area:$("fArea").value, q:$("fQuery").value.trim().toLowerCase() };
+}
+function sortPoint(){
+  if (userLoc) return userLoc;
+  var a = $("fArea").value; if (a){ var c=areaCoords(a); if (c) return c; }
+  return null;
+}
+function filteredTutors(){
+  var f=currentFilters(), pt=sortPoint();
+  var list = tutorsData.filter(function(t){
+    if (f.subject && (t.subjects||[]).indexOf(f.subject)<0) return false;
+    if (f.cls && (t.classes||[]).indexOf(f.cls)<0) return false;
+    if (f.area && t.area!==f.area) return false;
+    if (f.q){
+      var hay=(t.name+" "+(t.subjects||[]).join(" ")+" "+(t.classes||[]).join(" ")+" "+(t.area||"")+" "+(t.bio||"")).toLowerCase();
+      if (hay.indexOf(f.q)<0) return false;
+    }
+    return true;
+  });
+  if (pt){
+    list.forEach(function(t){ t._dist = (t.lat!=null) ? distKm(pt.lat,pt.lng,t.lat,t.lng) : null; });
+    list.sort(function(a,b){ return (a._dist==null?9999:a._dist)-(b._dist==null?9999:b._dist); });
+  }
+  return list;
+}
+function renderTutors(){
+  var list=filteredTutors(), grid=$("tutorGrid");
+  $("statTutors").textContent = tutorsData.length;
+  $("resultsSub").textContent = list.length + (list.length===1?" tutor":" tutors") + (sortPoint() ? " · nearest first" : "");
+  $("noResults").style.display = list.length ? "none" : "block";
+  grid.innerHTML = list.map(function(t){
+    var revs = reviewsData.filter(function(r){ return r.tutorId===t.id || r.tutorName===t.name; });
+    var avg = revs.length ? revs.reduce(function(s,r){return s+(r.rating||0);},0)/revs.length : (t.ratingAvg||0);
+    var cnt = revs.length || t.ratingCount || 0;
+    return '<article class="card">' +
+      '<div class="card-top"><div class="avatar">'+esc(initials(t.name))+'</div>' +
+      '<div><h3>'+esc(t.name)+'</h3><div class="meta">'+esc(t.qualification||"")+'</div>' +
+      (t.founder ? '<span class="badge badge-verified">✓ Verified — Platform Founder</span>' : '<span class="badge badge-verified">✓ Verified Tutor</span>') +
+      '</div></div>' +
+      '<div>'+starsHtml(avg,cnt)+'</div>' +
+      '<div class="tags">'+(t.subjects||[]).map(function(s){return '<span class="tag">'+esc(s)+'</span>';}).join("")+'</div>' +
+      '<div class="meta">Classes: '+esc((t.classes||[]).join(", "))+'</div>' +
+      '<div class="meta">📍 '+esc(t.area||"Hyderabad") + (t._dist!=null ? ' &nbsp;<span class="badge badge-dist">'+t._dist.toFixed(1)+' km away</span>' : '') + '</div>' +
+      (t.bio ? '<p class="small" style="margin:0">'+esc(t.bio)+'</p>' : '') +
+      '<div class="meta">'+esc(t.experience||"")+'</div>' +
+      '<div class="spacer"></div>' +
+      '<div class="rowline" style="justify-content:space-between"><span class="fee">'+fmtRs(t.fee)+' <small>/ month</small></span>' +
+      '<button class="btn btn-emerald btn-sm" type="button" data-request="'+esc(t.id)+'">Request this tutor</button></div>' +
+      '</article>';
+  }).join("");
+  grid.querySelectorAll("[data-request]").forEach(function(btn){
+    btn.addEventListener("click", function(){ openRequest(btn.getAttribute("data-request")); });
+  });
+  fillReviewTutorSelect();
+}
+function renderAreaChips(){
+  var counts={};
+  tutorsData.forEach(function(t){ counts[t.area]=(counts[t.area]||0)+1; });
+  var cur=$("fArea").value;
+  $("areaChips").innerHTML = AREAS.map(function(a){
+    return '<button type="button" class="chip'+(cur===a.name?" on":"")+'" data-area="'+esc(a.name)+'">'+esc(a.name)+' <span class="n">'+(counts[a.name]||0)+'</span></button>';
+  }).join("");
+  $("areaChips").querySelectorAll("[data-area]").forEach(function(ch){
+    ch.addEventListener("click", function(){
+      var a=ch.getAttribute("data-area");
+      $("fArea").value = ($("fArea").value===a) ? "" : a;
+      userLoc=null; $("locNote").textContent = $("fArea").value ? "Showing tutors nearest to "+$("fArea").value+" first." : "Tutors are sorted nearest-first once your area or location is set.";
+      renderAreaChips(); renderTutors(); drawMap();
+    });
+  });
+}
+function drawMap(){
+  var el=$("map"); if (!el) return;
+  if (!window.L){
+    el.outerHTML = '<div class="map-fallback" id="map">Map could not load. Areas: '+AREAS.map(function(a){return a.name;}).join(", ")+'.</div>';
+    return;
+  }
+  if (!mapObj){
+    mapObj = L.map("map").setView([25.396, 68.345], 11);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:18, attribution:"© OpenStreetMap contributors" }).addTo(mapObj);
+  }
+  mapMarkers.forEach(function(m){ mapObj.removeLayer(m); }); mapMarkers=[];
+  var pt=sortPoint();
+  tutorsData.forEach(function(t){
+    if (t.lat==null) return;
+    var m=L.marker([t.lat,t.lng]).addTo(mapObj)
+      .bindPopup("<b>"+esc(t.name)+"</b><br>"+esc((t.subjects||[]).join(", "))+"<br>"+esc(t.area||"")+(pt&&t._dist!=null?"<br>"+t._dist.toFixed(1)+" km away":""));
+    mapMarkers.push(m);
+  });
+  if (userLoc){
+    var um=L.circleMarker([userLoc.lat,userLoc.lng],{radius:8,color:"#c9a227",fillColor:"#c9a227",fillOpacity:.9}).addTo(mapObj).bindPopup("<b>You are here</b>");
+    mapMarkers.push(um);
+  }
+  setTimeout(function(){ if (mapObj) mapObj.invalidateSize(); }, 250);
+}
+
+/* ================= Reviews ================= */
+function fillReviewTutorSelect(){
+  var sel=$("rvTutor"); if (!sel) return; var cur=sel.value;
+  sel.innerHTML = tutorsData.map(function(t){ return '<option value="'+esc(t.id)+'" data-name="'+esc(t.name)+'">'+esc(t.name)+' — '+esc((t.subjects||[]).join(", "))+'</option>'; }).join("");
+  if (cur) sel.value=cur;
+}
+function renderReviews(){
+  var grid=$("reviewGrid");
+  $("noReviews").style.display = reviewsData.length ? "none" : "block";
+  grid.innerHTML = reviewsData.map(function(r){
+    return '<article class="review"><div>'+starsHtml(r.rating,0).replace('<span class="meta">New tutor</span>','')+'</div>' +
+      '<p>'+esc(r.text)+'</p><p class="meta" style="margin-top:.5rem">— '+esc(r.authorName||"Parent")+' · for '+esc(r.tutorName||"tutor")+'</p></article>';
+  }).join("");
+}
+function buildStarInput(){
+  var box=$("rvStars"); box.innerHTML="";
+  for (var i=1;i<=5;i++){
+    (function(n){
+      var b=document.createElement("button"); b.type="button"; b.textContent="★"; b.setAttribute("role","radio"); b.setAttribute("aria-label", n+" stars");
+      b.addEventListener("click", function(){ reviewRating=n; paintStars(); });
+      box.appendChild(b);
+    })(i);
+  }
+  paintStars();
+}
+function paintStars(){
+  $("rvStars").querySelectorAll("button").forEach(function(b,i){ b.classList.toggle("lit", i<reviewRating); });
+}
+
+/* ================= Request modal ================= */
+function openRequest(tutorId){
+  if (!currentUser){
+    sessionStorage.setItem("hht_pending_tutor", tutorId);
+    location.hash="#/account";
+    showMsg("acctMsg","Please sign in or create a free parent account first — then you can send your request and track it here.", false);
+    return;
+  }
+  if (currentProfile && currentProfile.role==="tutor"){ showMsg("acctMsg","You are signed in as a tutor. Requests are sent from parent accounts.", false); location.hash="#/account"; return; }
+  var t=null; tutorsData.forEach(function(x){ if (x.id===tutorId) t=x; });
+  if (!t) return;
+  requestTutorId=tutorId;
+  $("reqTitle").textContent="Request "+t.name;
+  $("reqSub").textContent=(t.subjects||[]).join(", ")+" · "+(t.area||"")+" · "+fmtRs(t.fee)+"/month. The tutor and our team will contact you — track the status in My Account.";
+  hideMsg("reqMsg");
+  var dlg=$("reqDialog");
+  if (typeof dlg.showModal==="function") dlg.showModal(); else dlg.setAttribute("open","");
+}
+</script>
+<script>
+"use strict";
+/* ================= Firestore security rules (deliverable) ================= */
+var FIRESTORE_RULES = [
+"rules_version = '2';",
+"service cloud.firestore {",
+"  match /databases/{database}/documents {",
+"",
+"    function signedIn() { return request.auth != null; }",
+"    function isAdmin() {",
+"      return signedIn() &&",
+"        exists(/databases/$(database)/documents/admins/$(request.auth.uid));",
+"    }",
+"    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }",
+"",
+"    // Admin list — written once by the owner setup, then only by admins.",
+"    // After the first admin exists, delete the 'create' line's bootstrap",
+"    // allowance by replacing it with:  allow create: if isAdmin();",
+"    match /admins/{uid} {",
+"      allow read: if isAdmin() || isOwner(uid);",
+"      allow create: if isOwner(uid);",
+"      allow update, delete: if isAdmin();",
+"    }",
+"",
+"    // User accounts — each user reads/writes only their own profile.",
+"    match /users/{uid} {",
+"      allow read: if isOwner(uid) || isAdmin();",
+"      allow create, update: if isOwner(uid);",
+"      allow delete: if isAdmin();",
+"    }",
+"",
+"    // Tutors — approved profiles are public; a tutor writes only their",
+"    // own application and can never approve themselves.",
+"    match /tutors/{tutorId} {",
+"      allow read: if resource.data.status == 'approved' || isOwner(tutorId) || isAdmin();",
+"      allow create: if isOwner(tutorId)",
+"        && request.resource.data.status == 'pending';",
+"      allow update: if isAdmin()",
+"        || (isOwner(tutorId) && request.resource.data.status == resource.data.status);",
+"      allow delete: if isAdmin();",
+"    }",
+"",
+"    // Tuition requests — parent creates and reads their own; the tutor",
+"    // involved and admins can read; only admins change the status.",
+"    match /tutor_requests/{reqId} {",
+"      allow read: if isAdmin()",
+"        || (signedIn() && resource.data.parentUid == request.auth.uid)",
+"        || (signedIn() && resource.data.tutorId == request.auth.uid);",
+"      allow create: if signedIn()",
+"        && request.resource.data.parentUid == request.auth.uid",
+"        && request.resource.data.status == 'New';",
+"      allow update: if isAdmin();",
+"      allow delete: if isAdmin()",
+"        || (signedIn() && resource.data.parentUid == request.auth.uid);",
+"    }",
+"",
+"    // Reviews — published reviews are public; new reviews start",
+"    // unpublished and only admins can publish or remove them.",
+"    match /reviews/{reviewId} {",
+"      allow read: if resource.data.approved == true || isAdmin()",
+"        || (signedIn() && resource.data.authorUid == request.auth.uid);",
+"      allow create: if signedIn()",
+"        && request.resource.data.authorUid == request.auth.uid",
+"        && request.resource.data.approved == false;",
+"      allow update, delete: if isAdmin();",
+"    }",
+"",
+"    // Site settings (ad slots, platform fee) — public read so the site",
+"    // can display ads; only admins can write.",
+"    match /settings/{docId} {",
+"      allow read: if true;",
+"      allow write: if isAdmin();",
+"    }",
+"  }",
+"}"
+].join("\n");
+
+/* ================= Routing ================= */
+var VIEWS = { "": "home", "/": "home", "/teach": "teach", "/account": "account", "/admin": "admin" };
+function currentRoute(){
+  var h = location.hash.replace(/^#/, "");
+  var q = h.indexOf("#"); if (q>=0) h = h.slice(0,q); /* tolerate #/#how style links */
+  if (h==="/#how") return "home";
+  return VIEWS.hasOwnProperty(h) ? VIEWS[h] : "home";
+}
+function applyRoute(){
+  var r = currentRoute();
+  ["home","teach","account","admin"].forEach(function(v){ $("view-"+v).classList.toggle("hidden", v!==r); });
+  document.querySelectorAll("[data-nav]").forEach(function(a){ a.classList.toggle("active", a.getAttribute("data-nav")===r); });
+  if (r==="home") setTimeout(drawMap, 60);
+  if (r==="teach") refreshTeachGate();
+  if (r==="account") refreshAccount();
+  if (r==="admin") refreshAdminGate();
+  window.scrollTo(0,0);
+}
+window.addEventListener("hashchange", applyRoute);
+
+/* ================= Auth header ================= */
+function renderAuthArea(){
+  var box=$("authArea");
+  if (currentUser){
+    box.innerHTML = '<span class="small" style="color:#dfe9e1;margin-right:.3rem">'+esc(currentProfile ? currentProfile.name : currentUser.email)+'</span>' +
+      '<button class="btn btn-light btn-sm" type="button" id="btnSignOut">Sign out</button>';
+    $("btnSignOut").addEventListener("click", signOut);
+  } else {
+    box.innerHTML = '<a class="btn btn-gold btn-sm" href="#/account" style="min-height:2.25rem">Sign in</a>';
+  }
+}
+function signOut(){ if (auth) auth.signOut(); }
+
+/* ================= Auth flows ================= */
+function friendlyErr(e){
+  var m = (e && e.message) || String(e||"Something went wrong.");
+  if (/permission|insufficient/i.test(m)) return "The database rules are still locked. Publish the Firestore rules from Admin → Database Rules first, then try again.";
+  if (/auth\/wrong-password|auth\/invalid-credential/i.test(m)) return "Email or password is incorrect.";
+  if (/auth\/user-not-found/i.test(m)) return "No account exists with this email yet — create a free account first.";
+  if (/auth\/email-already-in-use/i.test(m)) return "An account with this email already exists — please sign in.";
+  if (/auth\/weak-password/i.test(m)) return "Password is too weak — use at least 6 characters.";
+  if (/auth\/network/i.test(m)) return "Network problem — check your connection and try again.";
+  return m;
+}
+function wireAuthForms(){
+  $("tabLogin").addEventListener("click", function(){ $("tabLogin").classList.add("on"); $("tabRegister").classList.remove("on"); $("loginForm").classList.remove("hidden"); $("registerForm").classList.add("hidden"); });
+  $("tabRegister").addEventListener("click", function(){ $("tabRegister").classList.add("on"); $("tabLogin").classList.remove("on"); $("registerForm").classList.remove("hidden"); $("loginForm").classList.add("hidden"); });
+
+  $("loginForm").addEventListener("submit", function(ev){
+    ev.preventDefault(); hideMsg("acctMsg");
+    if (!firebaseReady) return showMsg("acctMsg","Sign-in is not available right now — the connection to Firebase could not be loaded.", false);
+    auth.signInWithEmailAndPassword($("liEmail").value.trim(), $("liPass").value)
+      .then(function(){ showMsg("acctMsg","Signed in. Welcome back!", true); })
+      .catch(function(e){ showMsg("acctMsg", friendlyErr(e), false); });
+  });
+
+  $("registerForm").addEventListener("submit", function(ev){
+    ev.preventDefault(); hideMsg("acctMsg");
+    if (!firebaseReady) return showMsg("acctMsg","Registration is not available right now — the connection to Firebase could not be loaded.", false);
+    var name=$("rgName").value.trim(), role=$("rgRole").value;
+    auth.createUserWithEmailAndPassword($("rgEmail").value.trim(), $("rgPass").value)
+      .then(function(cred){
+        return db.collection("users").doc(cred.user.uid).set({
+          name:name, email:cred.user.email, role:role,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+      })
+      .then(function(){
+        showMsg("acctMsg","Account created — you are signed in.", true);
+        if (role==="tutor") location.hash="#/teach";
+      })
+      .catch(function(e){ showMsg("acctMsg", friendlyErr(e), false); });
+  });
+
+  var so2=$("btnSignOut2"); if (so2) so2.addEventListener("click", signOut);
+}
+
+function onAuthChanged(user){
+  currentUser=user; currentProfile=null; currentIsAdmin=false;
+  renderAuthArea();
+  if (!user){ refreshAccount(); refreshTeachGate(); if (currentRoute()==="admin") refreshAdminGate(); return; }
+  if (!db) return;
+  db.collection("users").doc(user.uid).get()
+    .then(function(doc){ if (doc.exists) currentProfile=Object.assign({uid:user.uid}, doc.data()); })
+    .catch(function(){})
+    .then(function(){
+      return db.collection("admins").doc(user.uid).get()
+        .then(function(doc){ currentIsAdmin=doc.exists; })
+        .catch(function(){ currentIsAdmin=false; });
+    })
+    .then(function(){
+      renderAuthArea(); refreshAccount(); refreshTeachGate();
+      if (currentRoute()==="admin") refreshAdminGate();
+      var pending = sessionStorage.getItem("hht_pending_tutor");
+      if (pending && currentProfile && currentProfile.role==="parent"){
+        sessionStorage.removeItem("hht_pending_tutor");
+        location.hash="#/";
+        setTimeout(function(){ openRequest(pending); }, 350);
+      }
+    });
+}
+
+/* ================= Account dashboard ================= */
+function refreshAccount(){
+  if (!$("authPanel")) return;
+  var signedIn = !!currentUser;
+  $("authPanel").classList.toggle("hidden", signedIn);
+  $("dashPanel").classList.toggle("hidden", !signedIn);
+  if (!signedIn) return;
+  var p = currentProfile || { name: currentUser.email, role: "parent" };
+  $("dashName").textContent = p.name || currentUser.email;
+  $("dashRole").textContent = (p.role==="tutor" ? "Tutor account" : p.role==="admin" ? "Admin account" : "Parent / student account") + " · " + currentUser.email;
+  $("parentDash").classList.toggle("hidden", p.role==="tutor");
+  $("tutorDash").classList.toggle("hidden", p.role!=="tutor");
+  if (p.role==="tutor") loadTutorDash();
+  else loadMyRequests();
+}
+function loadMyRequests(){
+  var box=$("myRequests"); box.innerHTML='<p class="muted">Loading your requests…</p>';
+  if (!db) { box.innerHTML=""; return; }
+  db.collection("tutor_requests").where("parentUid","==",currentUser.uid).get()
+    .then(function(snap){
+      var rows=[]; snap.forEach(function(d){ rows.push(Object.assign({id:d.id}, d.data())); });
+      rows.sort(function(a,b){ return ((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.createdAt.seconds)||0); });
+      $("noRequests").style.display = rows.length ? "none" : "block";
+      box.innerHTML = rows.map(function(r){
+        var st = String(r.status||"New");
+        return '<div class="panel" style="padding:.9rem 1.1rem"><div class="rowline" style="justify-content:space-between">' +
+          '<div><b>'+esc(r.tutorName||"Tutor")+'</b> <span class="meta">· '+esc(r.subject||"")+' · '+esc(r.studentClass||"")+'</span></div>' +
+          '<span class="badge badge-status st-'+st.toLowerCase()+'">'+esc(st)+'</span></div>' +
+          (r.message ? '<p class="small muted" style="margin:.35rem 0 0">'+esc(r.message)+'</p>' : '') + '</div>';
+      }).join("");
+    })
+    .catch(function(e){ box.innerHTML='<p class="muted">'+esc(friendlyErr(e))+'</p>'; });
+}
+function loadTutorDash(){
+  if (!db) return;
+  db.collection("tutors").doc(currentUser.uid).get()
+    .then(function(doc){
+      var el=$("tutorDashBody");
+      if (!doc.exists){ el.textContent="You have not submitted your tutor application yet. Complete the professional profile to start verification."; return; }
+      var t=doc.data();
+      el.innerHTML = "Status: <b>"+esc(statusLabel(t.status))+"</b> · "+esc((t.subjects||[]).join(", "))+" · "+esc(t.area||"") +
+        (t.status==="approved" ? "<br>Your listing is live on the home page." : t.status==="rejected" ? "<br>Your application was not approved this time — update your details and save to apply again." : "<br>Our team is running the 5-step verification. Your listing goes live once approved.");
+    }).catch(function(){});
+}
+function statusLabel(s){ return s==="approved" ? "Verified & live" : s==="rejected" ? "Not approved" : "Under verification (pending)"; }
+
+/* ================= Teach form ================= */
+function refreshTeachGate(){
+  var gate=$("teachGate"), form=$("teachForm");
+  if (!gate) return;
+  if (!currentUser){
+    gate.classList.remove("hidden"); form.classList.add("hidden");
+    gate.innerHTML = 'Please <a href="#/account">sign in</a> with a <b>tutor account</b> first — create one free from the account page (choose “Tutor” when registering).';
+    return;
+  }
+  if (currentProfile && currentProfile.role!=="tutor" && !currentIsAdmin){
+    gate.classList.remove("hidden"); form.classList.add("hidden");
+    gate.innerHTML = 'You are signed in as a parent. Tutor applications need a tutor account — sign out and register again choosing “Tutor”, or keep this account for finding tutors.';
+    return;
+  }
+  gate.classList.add("hidden"); form.classList.remove("hidden");
+  if (!db) return;
+  db.collection("tutors").doc(currentUser.uid).get().then(function(doc){
+    if (!doc.exists){ $("teachStatus").textContent="Not submitted yet"; if (currentProfile) $("tName").value=currentProfile.name||""; return; }
+    var t=doc.data();
+    $("tName").value=t.name||""; $("tPhone").value=t.phone||""; $("tArea").value=t.area||"";
+    $("tFee").value=t.fee||""; $("tSubjects").value=(t.subjects||[]).join(", ");
+    $("tClasses").value=(t.classes||[]).join(", "); $("tQual").value=t.qualification||"";
+    $("tExp").value=t.experience||""; $("tBio").value=t.bio||"";
+    $("teachStatus").textContent="Status: "+statusLabel(t.status);
+  }).catch(function(){});
+}
+function wireTeachForm(){
+  fillSelect($("tArea"), AREAS.map(function(a){return a.name;}), "Select your base area");
+  $("tArea").querySelector("option").textContent="Select your base area";
+  $("teachForm").addEventListener("submit", function(ev){
+    ev.preventDefault(); hideMsg("teachMsg");
+    if (!firebaseReady || !db) return showMsg("teachMsg","Saving is not available right now — the connection to Firebase could not be loaded.", false);
+    var area=$("tArea").value, c=areaCoords(area);
+    var data={
+      name:$("tName").value.trim(), phone:$("tPhone").value.trim(), area:area,
+      lat: c?c.lat:null, lng: c?c.lng:null,
+      fee: parseInt($("tFee").value,10)||0,
+      subjects: $("tSubjects").value.split(",").map(function(s){return s.trim();}).filter(Boolean),
+      classes: $("tClasses").value.split(",").map(function(s){return s.trim();}).filter(Boolean),
+      qualification:$("tQual").value.trim(), experience:$("tExp").value.trim(), bio:$("tBio").value.trim(),
+      email: currentUser.email, updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+    var ref=db.collection("tutors").doc(currentUser.uid);
+    ref.get().then(function(doc){
+      if (!doc.exists) data.status="pending";
+      else data.status = doc.data().status || "pending";
+      if (data.status==="rejected") data.status="pending";
+      return ref.set(data, {merge:true});
+    }).then(function(){
+      showMsg("teachMsg","Application saved. Status: "+statusLabel(data.status)+".", true);
+      $("teachStatus").textContent="Status: "+statusLabel(data.status);
+    }).catch(function(e){ showMsg("teachMsg", friendlyErr(e), false); });
+  });
+}
+
+/* ================= Request submit ================= */
+function wireRequestDialog(){
+  $("reqCancel").addEventListener("click", function(){ $("reqDialog").close(); });
+  $("reqForm").addEventListener("submit", function(ev){
+    ev.preventDefault(); hideMsg("reqMsg");
+    if (!firebaseReady || !db) return showMsg("reqMsg","Sending is not available right now — the connection to Firebase could not be loaded.", false);
+    var t=null; tutorsData.forEach(function(x){ if (x.id===requestTutorId) t=x; });
+    db.collection("tutor_requests").add({
+      parentUid: currentUser.uid,
+      parentName: (currentProfile && currentProfile.name) || currentUser.email,
+      parentEmail: currentUser.email,
+      parentPhone: $("rqPhone").value.trim(),
+      tutorId: requestTutorId, tutorName: t ? t.name : "",
+      subject: $("rqSubject").value.trim(), studentClass: $("rqClass").value.trim(),
+      message: $("rqMsg").value.trim(), status:"New", feeCollected:false,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function(){
+      $("reqDialog").close();
+      location.hash="#/account";
+      showMsg("acctMsg","Request sent to "+(t?t.name:"the tutor")+". Track its status below.", true);
+      loadMyRequests();
+    }).catch(function(e){ showMsg("reqMsg", friendlyErr(e), false); });
+  });
+}
+
+/* ================= Review submit ================= */
+function wireReviewForm(){
+  buildStarInput();
+  $("reviewForm").addEventListener("submit", function(ev){
+    ev.preventDefault(); hideMsg("reviewMsg");
+    if (!currentUser){ location.hash="#/account"; return showMsg("acctMsg","Please sign in first — reviews are posted from parent/student accounts so they can be verified.", false); }
+    if (!reviewRating) return showMsg("reviewMsg","Please tap the stars to choose a rating.", false);
+    if (!firebaseReady || !db) return showMsg("reviewMsg","Reviews are not available right now — the connection to Firebase could not be loaded.", false);
+    var sel=$("rvTutor"), opt=sel.options[sel.selectedIndex];
+    db.collection("reviews").add({
+      authorUid: currentUser.uid, authorName: (currentProfile && currentProfile.name) || currentUser.email,
+      tutorId: sel.value, tutorName: opt ? opt.getAttribute("data-name") : "",
+      rating: reviewRating, text: $("rvText").value.trim(), approved:false,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    }).then(function(){
+      showMsg("reviewMsg","Thank you — your review was received and will appear here after moderation.", true);
+      $("rvText").value=""; reviewRating=0; paintStars();
+    }).catch(function(e){ showMsg("reviewMsg", friendlyErr(e), false); });
+  });
+}
+
+/* ================= Search wiring ================= */
+function wireSearch(){
+  fillSelect($("fSubject"), SUBJECTS, "All subjects");
+  fillSelect($("fClass"), CLASSES, "All classes");
+  fillSelect($("fArea"), AREAS.map(function(a){return a.name;}), "All areas");
+  ["fSubject","fClass","fArea"].forEach(function(id){
+    $(id).addEventListener("change", function(){ renderAreaChips(); renderTutors(); drawMap(); });
+  });
+  $("fQuery").addEventListener("input", function(){ renderTutors(); });
+  $("btnSearch").addEventListener("click", function(){
+    renderTutors(); drawMap();
+    document.getElementById("results").scrollIntoView({behavior:"smooth"});
+  });
+  $("btnLocate").addEventListener("click", function(){
+    if (!navigator.geolocation){ $("locNote").textContent="Location is not supported on this device — pick your area above instead."; return; }
+    $("locNote").textContent="Getting your location…";
+    navigator.geolocation.getCurrentPosition(function(pos){
+      userLoc={ lat:pos.coords.latitude, lng:pos.coords.longitude };
+      $("fArea").value="";
+      $("locNote").textContent="Location found — tutors are now sorted nearest to you first, with distances shown.";
+      renderAreaChips(); renderTutors(); drawMap();
+      if (mapObj) mapObj.setView([userLoc.lat,userLoc.lng], 12);
+    }, function(){
+      $("locNote").textContent="Location permission was not given — pick your area above and tutors will sort by distance from it.";
+    }, { timeout:10000 });
+  });
+}
+</script>
+<script>
+"use strict";
+/* ================= Admin ================= */
+var adminLoaded=false;
+function refreshAdminGate(){
+  $("rulesText").textContent = FIRESTORE_RULES;
+  var gate=$("adminGate"), panel=$("adminPanel");
+  if (currentUser && currentIsAdmin){
+    gate.classList.add("hidden"); panel.classList.remove("hidden");
+    loadAdmin();
+  } else {
+    panel.classList.add("hidden"); gate.classList.remove("hidden");
+    if (currentUser && !currentIsAdmin){
+      showMsg("adminMsg","You are signed in, but this account is not on the admins list. Sign in with the owner admin account.", false);
+    }
+    checkAdminSetup();
+  }
+}
+function checkAdminSetup(){
+  if (!firebaseReady || !db) return;
+  db.collection("admins").limit(1).get()
+    .then(function(snap){ $("adminSetupBox").classList.toggle("hidden", !snap.empty); })
+    .catch(function(){ $("adminSetupBox").classList.remove("hidden"); /* locked rules: show setup so owner can proceed after publishing rules */ });
+}
+function wireAdmin(){
+  $("adminSetupForm").addEventListener("submit", function(ev){
+    ev.preventDefault(); hideMsg("adminMsg");
+    if (!firebaseReady) return showMsg("adminMsg","Admin setup is not available right now — the connection to Firebase could not be loaded.", false);
+    var name=$("asName").value.trim();
+    auth.createUserWithEmailAndPassword($("asEmail").value.trim(), $("asPass").value)
+      .then(function(cred){
+        var uid=cred.user.uid;
+        return db.collection("admins").doc(uid).set({ name:name, email:cred.user.email, createdAt: firebase.firestore.FieldValue.serverTimestamp() })
+          .then(function(){ return db.collection("users").doc(uid).set({ name:name, email:cred.user.email, role:"admin", createdAt: firebase.firestore.FieldValue.serverTimestamp() }); });
+      })
+      .then(function(){ showMsg("adminMsg","Owner admin account created — you are signed in as admin.", true); })
+      .catch(function(e){ showMsg("adminMsg", friendlyErr(e), false); });
+  });
+  $("adminLoginForm").addEventListener("submit", function(ev){
+    ev.preventDefault(); hideMsg("adminMsg");
+    if (!firebaseReady) return showMsg("adminMsg","Admin sign-in is not available right now — the connection to Firebase could not be loaded.", false);
+    auth.signInWithEmailAndPassword($("adEmail").value.trim(), $("adPass").value)
+      .catch(function(e){ showMsg("adminMsg", friendlyErr(e), false); });
+  });
+  $("adminTabs").querySelectorAll("[data-atab]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      $("adminTabs").querySelectorAll("[data-atab]").forEach(function(b){ b.classList.toggle("on", b===btn); });
+      document.querySelectorAll("[data-apane]").forEach(function(p){ p.classList.toggle("hidden", p.getAttribute("data-apane")!==btn.getAttribute("data-atab")); });
+    });
+  });
+  $("settingsForm").addEventListener("submit", function(ev){
+    ev.preventDefault(); hideMsg("adminMsg");
+    var data={
+      adTop:{ text:$("adTopText").value.trim(), link:$("adTopLink").value.trim() },
+      adMid:{ text:$("adMidText").value.trim(), link:$("adMidLink").value.trim() },
+      feeEnabled: $("feeEnabled").value==="on",
+      feePercent: Math.max(0, Math.min(50, parseInt($("feePercent").value,10)||0))
+    };
+    db.collection("settings").doc("main").set(data, {merge:true})
+      .then(function(){ settingsData=Object.assign(settingsData, data); renderAds(); showMsg("adminMsg","Settings saved — ad slots and fee settings are updated on the public site.", true); loadAdminEarningsOnly(); })
+      .catch(function(e){ showMsg("adminMsg", friendlyErr(e), false); });
+  });
+  $("btnCopyRules").addEventListener("click", function(){
+    var done=function(){ showMsg("adminMsg","Firestore rules copied — paste them in Firebase Console → Firestore Database → Rules → Publish.", true); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(FIRESTORE_RULES).then(done, done);
+    else done();
+  });
+  $("btnDlRules").addEventListener("click", function(){ downloadText("firestore.rules", FIRESTORE_RULES, "text/plain"); });
+  $("btnDlSite").addEventListener("click", function(){
+    downloadText("index.html", "<!doctype html>\n" + document.documentElement.outerHTML, "text/html");
+  });
+}
+function downloadText(name, text, type){
+  var blob=new Blob([text], {type:type}), url=URL.createObjectURL(blob);
+  var a=document.createElement("a"); a.href=url; a.download=name; document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(url); a.remove(); }, 400);
+}
+function loadAdmin(){
+  if (!db) return;
+  db.collection("settings").doc("main").get().then(function(doc){
+    if (doc.exists){
+      var s=doc.data(); settingsData=Object.assign(settingsData, s);
+      $("adTopText").value=(s.adTop&&s.adTop.text)||""; $("adTopLink").value=(s.adTop&&s.adTop.link)||"";
+      $("adMidText").value=(s.adMid&&s.adMid.text)||""; $("adMidLink").value=(s.adMid&&s.adMid.link)||"";
+      $("feeEnabled").value=s.feeEnabled?"on":"off"; $("feePercent").value=(s.feePercent!=null?s.feePercent:10);
+    }
+  }).catch(function(){});
+  loadAdminTutors(); loadAdminRequests(); loadAdminReviews(); loadAdminEarningsOnly();
+}
+function loadAdminEarningsOnly(){ loadAdminRequests(true); }
+function loadAdminTutors(){
+  db.collection("tutors").get().then(function(snap){
+    var rows=[]; snap.forEach(function(d){ rows.push(Object.assign({id:d.id}, d.data())); });
+    var pending=rows.filter(function(t){return t.status!=="approved";}).length;
+    $("ovTutors").textContent=rows.filter(function(t){return t.status==="approved";}).length;
+    $("ovPending").textContent=pending;
+    var tb=$("adminTutorsTable").querySelector("tbody");
+    tb.innerHTML = rows.length ? rows.map(function(t){
+      var areaOpts = AREAS.map(function(a){ return '<option value="'+esc(a.name)+'"'+(t.area===a.name?" selected":"")+'>'+esc(a.name)+'</option>'; }).join("");
+      return '<tr><td><b>'+esc(t.name)+'</b><br><span class="meta">'+esc(t.email||"")+'<br>'+esc(t.qualification||"")+'</span></td>' +
+        '<td>'+esc((t.subjects||[]).join(", "))+'<br><span class="meta">'+esc((t.classes||[]).join(", "))+'</span></td>' +
+        '<td><select data-tarea="'+esc(t.id)+'">'+areaOpts+'</select></td>' +
+        '<td>'+fmtRs(t.fee)+'</td>' +
+        '<td><span class="badge badge-status">'+esc(statusLabel(t.status))+'</span></td>' +
+        '<td><div class="rowline">' +
+          (t.status!=="approved" ? '<button class="btn btn-emerald btn-sm" type="button" data-tapprove="'+esc(t.id)+'">Approve</button>' : '') +
+          (t.status!=="rejected" ? '<button class="btn btn-danger btn-sm" type="button" data-treject="'+esc(t.id)+'">Reject</button>' : '') +
+        '</div></td></tr>';
+    }).join("") : '<tr><td colspan="6" class="muted">No tutor applications yet.</td></tr>';
+    tb.querySelectorAll("[data-tapprove]").forEach(function(b){ b.addEventListener("click", function(){ setTutorStatus(b.getAttribute("data-tapprove"), "approved"); }); });
+    tb.querySelectorAll("[data-treject]").forEach(function(b){ b.addEventListener("click", function(){ setTutorStatus(b.getAttribute("data-treject"), "rejected"); }); });
+    tb.querySelectorAll("[data-tarea]").forEach(function(sel){
+      sel.addEventListener("change", function(){
+        var c=areaCoords(sel.value);
+        db.collection("tutors").doc(sel.getAttribute("data-tarea")).update({ area:sel.value, lat:c?c.lat:null, lng:c?c.lng:null })
+          .then(function(){ showMsg("adminMsg","Tutor base area updated.", true); loadPublicData(); })
+          .catch(function(e){ showMsg("adminMsg", friendlyErr(e), false); });
+      });
+    });
+  }).catch(function(e){ showMsg("adminMsg", friendlyErr(e), false); });
+}
+function setTutorStatus(id, status){
+  db.collection("tutors").doc(id).update({ status:status })
+    .then(function(){ showMsg("adminMsg","Tutor "+(status==="approved"?"approved and now live.":"rejected."), true); loadAdminTutors(); loadPublicData(); })
+    .catch(function(e){ showMsg("adminMsg", friendlyErr(e), false); });
+}
+function loadAdminRequests(earningsOnly){
+  db.collection("tutor_requests").get().then(function(snap){
+    var rows=[]; snap.forEach(function(d){ rows.push(Object.assign({id:d.id}, d.data())); });
+    rows.sort(function(a,b){ return ((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.createdAt.seconds)||0); });
+    $("ovRequests").textContent=rows.length;
+    renderEarnings(rows);
+    if (earningsOnly) return;
+    var tb=$("adminRequestsTable").querySelector("tbody");
+    var statuses=["New","Contacted","Matched","Closed"];
+    tb.innerHTML = rows.length ? rows.map(function(r){
+      var opts=statuses.map(function(s){ return '<option value="'+s+'"'+(r.status===s?" selected":"")+'>'+s+'</option>'; }).join("");
+      return '<tr><td><b>'+esc(r.parentName||"")+'</b><br><span class="meta">'+esc(r.parentEmail||"")+'<br>'+esc(r.parentPhone||"")+'</span></td>' +
+        '<td>'+esc(r.tutorName||"")+'</td>' +
+        '<td>'+esc(r.studentClass||"")+' · '+esc(r.subject||"")+'</td>' +
+        '<td class="small">'+esc(r.message||"")+'</td>' +
+        '<td><select data-rstatus="'+esc(r.id)+'">'+opts+'</select></td>' +
+        '<td><button class="btn btn-danger btn-sm" type="button" data-rdel="'+esc(r.id)+'">Delete</button></td></tr>';
+    }).join("") : '<tr><td colspan="6" class="muted">No requests yet.</td></tr>';
+    tb.querySelectorAll("[data-rstatus]").forEach(function(sel){
+      sel.addEventListener("change", function(){
+        db.collection("tutor_requests").doc(sel.getAttribute("data-rstatus")).update({ status:sel.value })
+          .then(function(){ showMsg("adminMsg","Request marked "+sel.value+".", true); loadAdminRequests(); })
+          .catch(function(e){ showMsg("adminMsg", friendlyErr(e), false); });
+      });
+    });
+    tb.querySelectorAll("[data-rdel]").forEach(function(b){
+      b.addEventListener("click", function(){
+        db.collection("tutor_requests").doc(b.getAttribute("data-rdel")).delete()
+          .then(function(){ loadAdminRequests(); }).catch(function(e){ showMsg("adminMsg", friendlyErr(e), false); });
+      });
+    });
+  }).catch(function(){});
+}
+function renderEarnings(rows){
+  var pct = settingsData.feeEnabled ? (settingsData.feePercent||0) : 0;
+  var feeByTutor={};
+  tutorsData.forEach(function(t){ feeByTutor[t.id]=t.fee||0; feeByTutor[t.name]=t.fee||0; });
+  var matched = rows.filter(function(r){ return r.status==="Matched" || r.status==="Closed"; });
+  var tb=$("earnTable").querySelector("tbody");
+  var totalCollected=0, totalPending=0;
+  /* Tutor fees for matched requests come from the tutors collection when available. */
+  var html = matched.map(function(r){
+    var fee = feeByTutor[r.tutorId] || feeByTutor[r.tutorName] || 0;
+    var cut = Math.round(fee * pct / 100);
+    if (r.feeCollected) totalCollected+=cut; else totalPending+=cut;
+    return '<tr><td>'+esc(r.parentName||"")+'<br><span class="meta">'+esc(r.subject||"")+'</span></td>' +
+      '<td>'+esc(r.tutorName||"")+'</td><td>'+fmtRs(fee)+'</td><td>'+fmtRs(cut)+(pct?' ('+pct+'%)':'')+'</td>' +
+      '<td>'+(r.feeCollected ? '<span class="badge badge-verified">Collected</span>' : '<span class="badge badge-status">Pending</span>')+'</td>' +
+      '<td>'+(settingsData.feeEnabled && !r.feeCollected ? '<button class="btn btn-emerald btn-sm" type="button" data-fee="'+esc(r.id)+'">Mark collected</button>' : '')+'</td></tr>';
+  }).join("");
+  tb.innerHTML=html;
+  $("earnEmpty").style.display = matched.length ? "none" : "block";
+  $("earnSummary").innerHTML = settingsData.feeEnabled
+    ? "Platform fee is <b>ON</b> at "+pct+"% of the tutor's first month. Collected: <b>"+fmtRs(totalCollected)+"</b> · Pending: <b>"+fmtRs(totalPending)+"</b>. Ad income is tracked with your advertisers separately."
+    : "Platform fee is <b>OFF</b> — the platform currently earns from ads only. Turn the fee on in Settings &amp; Ads to start collecting "+(settingsData.feePercent||10)+"% of each matched tutor's first month.";
+  tb.querySelectorAll("[data-fee]").forEach(function(b){
+    b.addEventListener("click", function(){
+      db.collection("tutor_requests").doc(b.getAttribute("data-fee")).update({ feeCollected:true })
+        .then(function(){ loadAdminRequests(); }).catch(function(e){ showMsg("adminMsg", friendlyErr(e), false); });
+    });
+  });
+}
+function loadAdminReviews(){
+  db.collection("reviews").get().then(function(snap){
+    var rows=[]; snap.forEach(function(d){ rows.push(Object.assign({id:d.id}, d.data())); });
+    $("ovReviews").textContent = rows.filter(function(r){ return !r.approved; }).length;
+    var tb=$("adminReviewsTable").querySelector("tbody");
+    tb.innerHTML = rows.length ? rows.map(function(r){
+      return '<tr><td><b>'+esc(r.authorName||"")+'</b><p class="small" style="margin:.2rem 0 0">'+esc(r.text||"")+'</p></td>' +
+        '<td>'+esc(r.tutorName||"")+'</td><td>'+("★".repeat(r.rating||0))+'</td>' +
+        '<td>'+(r.approved ? '<span class="badge badge-verified">Published</span>' : '<span class="badge badge-status">Hidden</span>')+'</td>' +
+        '<td><div class="rowline">' +
+          (r.approved ? '<button class="btn btn-ghost btn-sm" type="button" data-rhide="'+esc(r.id)+'">Hide</button>' : '<button class="btn btn-emerald btn-sm" type="button" data-rpub="'+esc(r.id)+'">Publish</button>') +
+          '<button class="btn btn-danger btn-sm" type="button" data-rrev-del="'+esc(r.id)+'">Delete</button></div></td></tr>';
+    }).join("") : '<tr><td colspan="5" class="muted">No reviews yet.</td></tr>';
+    tb.querySelectorAll("[data-rpub]").forEach(function(b){ b.addEventListener("click", function(){ setReviewApproved(b.getAttribute("data-rpub"), true); }); });
+    tb.querySelectorAll("[data-rhide]").forEach(function(b){ b.addEventListener("click", function(){ setReviewApproved(b.getAttribute("data-rhide"), false); }); });
+    tb.querySelectorAll("[data-rrev-del]").forEach(function(b){ b.addEventListener("click", function(){
+      db.collection("reviews").doc(b.getAttribute("data-rrev-del")).delete().then(function(){ loadAdminReviews(); loadPublicData(); }).catch(function(e){ showMsg("adminMsg", friendlyErr(e), false); });
+    }); });
+  }).catch(function(){});
+}
+function setReviewApproved(id, approved){
+  db.collection("reviews").doc(id).update({ approved:approved })
+    .then(function(){ showMsg("adminMsg", approved ? "Review published." : "Review hidden.", true); loadAdminReviews(); loadPublicData(); })
+    .catch(function(e){ showMsg("adminMsg", friendlyErr(e), false); });
+}
+
+/* ================= Init ================= */
+document.addEventListener("DOMContentLoaded", function(){
+  tutorsData=[FOUNDER]; reviewsData=[];
+  wireSearch(); wireAuthForms(); wireTeachForm(); wireRequestDialog(); wireReviewForm(); wireAdmin();
+  renderAuthArea(); loadPublicData(); applyRoute();
+  if (firebaseReady && auth) auth.onAuthStateChanged(onAuthChanged);
+  setTimeout(drawMap, 400);
+});
+</script>
+</body>
+</html>
