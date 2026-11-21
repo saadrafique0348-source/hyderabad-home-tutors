@@ -222,6 +222,34 @@
   .rate-input button{background:none;border:none;color:var(--line);padding:.2rem;min-height:2.25rem}
   .rate-input button.lit{color:var(--gold)}
   @media (max-width:640px){ .hero{padding:1.8rem 0 1.6rem} #map{height:280px} }
+  /* ---------- AI assistant chat widget ---------- */
+  .ai-fab{position:fixed;right:1rem;bottom:1rem;z-index:200;width:56px;height:56px;border-radius:50%;border:2px solid var(--gold);background:var(--emerald-800);color:var(--gold-bright);display:grid;place-items:center;box-shadow:0 10px 26px rgba(3,33,27,.35);padding:0}
+  .ai-fab:hover{background:var(--emerald-700)}
+  .ai-fab svg{width:28px;height:28px}
+  .ai-panel{position:fixed;right:1rem;bottom:5.25rem;z-index:200;width:min(360px,calc(100vw - 2rem));height:min(500px,calc(100dvh - 7rem));display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+  .ai-panel[hidden]{display:none}
+  .ai-head{background:var(--emerald-950);color:#f4f1e6;padding:.75rem 1rem;border-bottom:2px solid var(--gold);display:flex;align-items:flex-start;gap:.6rem}
+  .ai-head h3{color:#fff;font-size:1.05rem}
+  .ai-head p{margin:.1rem 0 0;font-size:.8rem;color:#cfe0d4}
+  .ai-close{margin-left:auto;background:transparent;border:none;color:#f4f1e6;font-size:1.3rem;line-height:1;padding:.15rem .4rem;min-height:2rem}
+  .ai-msgs{flex:1;overflow-y:auto;padding:.85rem;display:flex;flex-direction:column;gap:.55rem;background:var(--bg)}
+  .ai-msg{max-width:85%;padding:.55rem .75rem;border-radius:12px;font-size:.92rem;line-height:1.45;overflow-wrap:anywhere;white-space:pre-wrap}
+  .ai-msg.bot{background:var(--surface);border:1px solid var(--line);color:var(--ink);align-self:flex-start;border-bottom-left-radius:4px}
+  .ai-msg.user{background:var(--emerald-700);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+  .ai-msg.err{background:#fdeceb;color:#7a130d;border:1px solid #f3c1bd;align-self:flex-start;border-bottom-left-radius:4px}
+  @media (prefers-color-scheme: dark){ .ai-msg.err{background:#3d1512;color:#ffb4ab;border-color:#5c2a26} }
+  .ai-typing{align-self:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;border-bottom-left-radius:4px;padding:.7rem .8rem;display:flex;gap:.3rem}
+  .ai-typing span{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:aiBlink 1.2s infinite}
+  .ai-typing span:nth-child(2){animation-delay:.2s}
+  .ai-typing span:nth-child(3){animation-delay:.4s}
+  @keyframes aiBlink{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
+  @media (prefers-reduced-motion: reduce){ .ai-typing span{animation:none;opacity:.6} }
+  .ai-form{display:flex;gap:.5rem;padding:.6rem;border-top:1px solid var(--line);background:var(--surface)}
+  .ai-form input{flex:1;min-width:0;width:auto}
+  .ai-send{background:var(--gold);color:#231a02;border:none;border-radius:10px;width:2.75rem;min-height:2.5rem;display:grid;place-items:center;flex:none;padding:0}
+  .ai-send:hover{background:var(--gold-bright)}
+  .ai-send svg{width:20px;height:20px}
+  @media (max-width:480px){ .ai-fab{right:.8rem;bottom:.8rem} .ai-panel{right:.6rem;bottom:5rem;width:calc(100vw - 1.2rem)} }
 </style>
 </head>
 <body>
@@ -2079,6 +2107,132 @@ document.addEventListener("DOMContentLoaded", function(){
   }
   setTimeout(drawMap, 400);
 });
+</script>
+
+<!-- AI assistant chat widget -->
+<button class="ai-fab" id="aiFab" type="button" aria-label="AI Assistant se chat karein" aria-haspopup="dialog">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</button>
+<div class="ai-panel" id="aiPanel" role="dialog" aria-label="AI Assistant" hidden>
+  <div class="ai-head">
+    <div>
+      <h3>AI Assistant</h3>
+      <p>Hyderabad Home Tutors se poochhein</p>
+    </div>
+    <button class="ai-close" id="aiClose" type="button" aria-label="Chat band karein">&times;</button>
+  </div>
+  <div class="ai-msgs" id="aiMsgs" aria-live="polite"></div>
+  <form class="ai-form" id="aiForm">
+    <input id="aiInput" type="text" maxlength="500" placeholder="Apna sawal likhein…" autocomplete="off" aria-label="Apna sawal likhein" />
+    <button class="ai-send" id="aiSend" type="submit" aria-label="Message bhejein">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+    </button>
+  </form>
+</div>
+<script>
+/* ================= AI assistant chat =================
+   Talks to the same private Apps Script web app as the email-code sender.
+   Any AI key lives only inside the Apps Script project — never in this
+   page. The POST is fire-and-forget (mode:"no-cors", the web app sends no
+   CORS headers, so the response is opaque and never read); the reply is
+   then picked up by JSONP polling on action=chatResult every 2 seconds
+   for up to 30 seconds. */
+(function(){
+  var AI_CHAT_URL = "https://script.google.com/macros/s/AKfycbwFuzM-Ks31_Nr9yRRs1-nOogj31N024ep1UJiCpUizInePzyK7zDT97C74oXZCIciDnQ/exec";
+  var AI_GREETING = "Salam! Main Hyderabad Home Tutors ka AI assistant hoon — tutor, fee ya registration ke baare mein poochhein.";
+  var AI_ERROR = "Maazrat, abhi jawab nahi de saka — dobara koshish karein";
+  var fab = document.getElementById("aiFab"), panel = document.getElementById("aiPanel"),
+      msgs = document.getElementById("aiMsgs"), form = document.getElementById("aiForm"),
+      input = document.getElementById("aiInput"), closeBtn = document.getElementById("aiClose");
+  if (!fab || !panel || !msgs || !form || !input) return;
+  var greeted = false;
+  function scrollDown(){ msgs.scrollTop = msgs.scrollHeight; }
+  function addMsg(text, cls){
+    var d = document.createElement("div");
+    d.className = "ai-msg " + cls;
+    d.textContent = text;
+    msgs.appendChild(d); scrollDown();
+    return d;
+  }
+  function addTyping(){
+    var d = document.createElement("div");
+    d.className = "ai-typing";
+    d.setAttribute("aria-label", "Assistant jawab likh raha hai");
+    d.innerHTML = "<span></span><span></span><span></span>";
+    msgs.appendChild(d); scrollDown();
+    return d;
+  }
+  function openPanel(){
+    panel.hidden = false;
+    if (!greeted){ greeted = true; addMsg(AI_GREETING, "bot"); }
+    input.focus();
+  }
+  function closePanel(){ panel.hidden = true; fab.focus(); }
+  fab.addEventListener("click", function(){ if (panel.hidden) openPanel(); else closePanel(); });
+  if (closeBtn) closeBtn.addEventListener("click", closePanel);
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !panel.hidden) closePanel(); });
+
+  function pollForReply(reqId, typingEl){
+    var cbName = "hhtChatCb_" + reqId.replace(/[^a-zA-Z0-9]/g, "");
+    var started = Date.now(), timer = null, script = null, done = false;
+    function cleanup(){
+      done = true;
+      if (timer) clearInterval(timer);
+      if (script && script.parentNode) script.parentNode.removeChild(script);
+      try { delete window[cbName]; } catch (err) { window[cbName] = undefined; }
+    }
+    function fail(){
+      if (done) return;
+      cleanup();
+      if (typingEl.parentNode) typingEl.parentNode.removeChild(typingEl);
+      addMsg(AI_ERROR, "err");
+    }
+    window[cbName] = function(data){
+      if (done) return;
+      var reply = data && (data.reply || data.text || data.answer || data.message);
+      if (typeof reply === "string" && reply){
+        cleanup();
+        if (typingEl.parentNode) typingEl.parentNode.removeChild(typingEl);
+        addMsg(reply, "bot");
+      } else if (data && data.error){
+        fail();
+      }
+      /* No reply field yet — the answer is still being prepared; keep polling. */
+    };
+    function attempt(){
+      if (done) return;
+      if (Date.now() - started > 30000){ fail(); return; }
+      if (script && script.parentNode) script.parentNode.removeChild(script);
+      script = document.createElement("script");
+      script.src = AI_CHAT_URL + "?action=chatResult&reqId=" + encodeURIComponent(reqId) + "&callback=" + cbName;
+      script.async = true;
+      document.head.appendChild(script);
+    }
+    attempt();
+    timer = setInterval(attempt, 2000);
+  }
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var text = input.value.trim().slice(0, 500);
+    if (!text) return;
+    input.value = "";
+    addMsg(text, "user");
+    var typingEl = addTyping();
+    var reqId = Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
+    fetch(AI_CHAT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({ action: "chat", message: text, reqId: reqId })
+    }).then(function(){
+      pollForReply(reqId, typingEl);
+    }).catch(function(){
+      if (typingEl.parentNode) typingEl.parentNode.removeChild(typingEl);
+      addMsg(AI_ERROR, "err");
+    });
+  });
+})();
 </script>
 </body>
 </html>
