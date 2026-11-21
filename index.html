@@ -2194,7 +2194,7 @@ document.addEventListener("DOMContentLoaded", function(){
         cleanup();
         if (typingEl.parentNode) typingEl.parentNode.removeChild(typingEl);
         addMsg(reply, "bot");
-      } else if (data && data.error){
+      } else if (data && data.error && data.error !== 'pending'){
         fail();
       }
       /* No reply field yet — the answer is still being prepared; keep polling. */
