@@ -150,6 +150,9 @@
   .msg.err{background:#fdeceb;color:#7a130d;border:1px solid #f3c1bd}
   .msg.ok{background:var(--emerald-50);color:var(--emerald-800);border:1px solid var(--emerald-100)}
   @media (prefers-color-scheme: dark){ .msg.err{background:#3d1512;color:#ffb4ab} .msg.ok{color:#a7e8cd} }
+  .verify-banner{background:var(--gold-soft);border:1px solid var(--gold);border-radius:var(--radius);padding:.9rem 1.1rem;margin-top:1rem}
+  .verify-banner p{margin:0 0 .6rem}
+  .code-input{letter-spacing:.35em;font-size:1.15rem;font-weight:700;text-align:center;max-width:230px}
   table.tbl{width:100%;border-collapse:collapse;font-size:.92rem}
   table.tbl th,table.tbl td{padding:.55rem .6rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
   table.tbl th{font-size:.78rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft)}
@@ -361,6 +364,21 @@
           <button class="btn btn-emerald" type="submit">Sign in</button>
           <div class="auth-divider">or</div>
           <button class="btn btn-google" type="button" id="btnGoogleLogin"><span class="gmark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg></span> Continue with Google</button>
+          <div class="auth-divider">or</div>
+          <div>
+            <label for="liPhPhone">Sign in with your phone number</label>
+            <input id="liPhPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="03xx-xxxxxxx" />
+            <p class="small muted" style="margin:.35rem 0 .55rem">We text a 6-digit code to this number by SMS. Firebase sends these codes by SMS text message only — a code cannot be sent on WhatsApp.</p>
+            <button class="btn btn-ghost" type="button" id="btnLiSendCode" style="width:100%">Text me a sign-in code</button>
+            <div id="liPhCodeBox" class="hidden" style="margin-top:.6rem">
+              <label for="liPhCode">6-digit code from the SMS</label>
+              <div class="rowline">
+                <input id="liPhCode" class="code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="––––––" />
+                <button class="btn btn-emerald" type="button" id="btnLiConfirmCode">Verify &amp; sign in</button>
+              </div>
+            </div>
+            <div id="recaptchaLogin" style="margin-top:.6rem"></div>
+          </div>
         </div>
       </form>
       <form id="registerForm" class="hidden">
@@ -376,14 +394,37 @@
             </select>
           </div>
           <button class="btn btn-gold" type="submit">Create my free account</button>
+          <p class="small muted" style="margin:0">Right after sign-up we email you a verification link — open that email and tap the link to verify your email address.</p>
           <div class="auth-divider">or</div>
           <button class="btn btn-google" type="button" id="btnGoogleRegister"><span class="gmark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg></span> Continue with Google</button>
           <p class="small muted" style="margin:0">With Google, your account is created instantly. If you chose “Tutor” above, that choice is kept and you will be taken to the tutor application.</p>
+          <div class="auth-divider">or</div>
+          <div>
+            <label for="rgPhPhone">Create your account with your phone number</label>
+            <input id="rgPhPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="03xx-xxxxxxx" />
+            <p class="small muted" style="margin:.35rem 0 .55rem">We text a 6-digit code to this number by SMS — entering it creates your account and verifies the number. Firebase sends these codes by SMS text message only, so the code cannot arrive on WhatsApp. Your name and “joining as” choice above are saved to the account.</p>
+            <button class="btn btn-ghost" type="button" id="btnRgSendCode" style="width:100%">Text me a code</button>
+            <div id="rgPhCodeBox" class="hidden" style="margin-top:.6rem">
+              <label for="rgPhCode">6-digit code from the SMS</label>
+              <div class="rowline">
+                <input id="rgPhCode" class="code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="––––––" />
+                <button class="btn btn-emerald" type="button" id="btnRgConfirmCode">Verify code &amp; create account</button>
+              </div>
+            </div>
+            <div id="recaptchaRegister" style="margin-top:.6rem"></div>
+          </div>
         </div>
       </form>
     </div>
 
     <div id="dashPanel" class="hidden" style="margin-top:1rem">
+      <div id="verifyBanner" class="verify-banner hidden">
+        <p><b>Please verify your email.</b> We sent a verification link to <b id="verifyEmailAddr"></b>. Open that email and tap the link — until you do, your email stays unverified.</p>
+        <div class="rowline">
+          <button class="btn btn-gold btn-sm" type="button" id="btnResendVerify">Resend verification email</button>
+          <button class="btn btn-ghost btn-sm" type="button" id="btnRefreshVerify">I have verified — check again</button>
+        </div>
+      </div>
       <div class="panel">
         <div class="rowline" style="justify-content:space-between">
           <div><h3 id="dashName"></h3><p class="muted small" id="dashRole" style="margin:.2rem 0 0"></p></div>
@@ -528,6 +569,8 @@
             <button class="btn btn-ghost btn-sm" type="button" id="btnDlStorageRules">Download storage.rules</button>
           </div>
           <p class="small muted" style="margin-top:.8rem"><b>Also enable Google sign-in:</b> Firebase Console → Authentication → Sign-in method → Google → Enable, and add your live domain under Authentication → Settings → Authorized domains if it is not listed.</p>
+          <p class="small muted"><b>Email verification:</b> already built into the site — every new email/password account is emailed a verification link automatically (Firebase's built-in email). Nothing to publish; you can optionally customise that email under Firebase Console → Authentication → Templates.</p>
+          <p class="small muted"><b>Phone-number sign-up (one manual step):</b> Firebase Console → Authentication → Sign-in method → <b>Phone</b> → Enable, and make sure the live domain is under Authentication → Settings → Authorized domains. Firebase sends the 6-digit code by <b>SMS text message only</b> — it cannot send codes on WhatsApp. The free Spark plan has a small daily SMS quota, so expect “quota reached” errors if many people sign up by phone in one day.</p>
           <p class="small muted">Deploy: put this single <b>index.html</b> in a GitHub repository, enable GitHub Pages, and point the custom domain <b>hyderabadhometutors.tech</b> at it (CNAME file + DNS). No build step and no server are needed — the page talks directly to Firebase.</p>
         </div>
       </div>
@@ -1018,7 +1061,7 @@ window.addEventListener("hashchange", applyRoute);
 function renderAuthArea(){
   var box=$("authArea");
   if (currentUser){
-    box.innerHTML = '<span class="small" style="color:#dfe9e1;margin-right:.3rem">'+esc(currentProfile ? currentProfile.name : currentUser.email)+'</span>' +
+    box.innerHTML = '<span class="small" style="color:#dfe9e1;margin-right:.3rem">'+esc((currentProfile && currentProfile.name) || currentUser.email || currentUser.phoneNumber || "")+'</span>' +
       '<button class="btn btn-light btn-sm" type="button" id="btnSignOut">Sign out</button>';
     $("btnSignOut").addEventListener("click", signOut);
   } else {
@@ -1040,6 +1083,13 @@ function friendlyErr(e){
   if (/auth\/user-not-found/i.test(m)) return "No account exists with this email yet — create a free account first.";
   if (/auth\/email-already-in-use/i.test(m)) return "An account with this email already exists — please sign in.";
   if (/auth\/weak-password/i.test(m)) return "Password is too weak — use at least 6 characters.";
+  if (code==="auth/invalid-phone-number") return "That phone number does not look valid. Enter your mobile number like 0300-1234567.";
+  if (code==="auth/missing-phone-number") return "Please enter your phone number first.";
+  if (code==="auth/invalid-verification-code") return "That code is incorrect — check the SMS and try again, or tap the send button to get a new code.";
+  if (code==="auth/code-expired" || code==="auth/session-expired") return "That code has expired. Send a fresh code and enter the new one.";
+  if (code==="auth/too-many-requests") return "Too many attempts — please wait a few minutes and try again.";
+  if (code==="auth/captcha-check-failed") return "The “I'm not a robot” check did not pass. Complete it and try again.";
+  if (code==="auth/quota-exceeded") return "Today's free SMS limit for this project has been reached. Please try again tomorrow, or sign up with email or Google instead.";
   if (/auth\/network/i.test(m)) return "Network problem — check your connection and try again.";
   return m;
 }
@@ -1106,16 +1156,20 @@ function wireAuthForms(){
   $("registerForm").addEventListener("submit", function(ev){
     ev.preventDefault(); hideMsg("acctMsg");
     if (!firebaseReady) return showMsg("acctMsg","Registration is not available right now — the connection to Firebase could not be loaded.", false);
-    var name=$("rgName").value.trim(), role=$("rgRole").value;
-    auth.createUserWithEmailAndPassword($("rgEmail").value.trim(), $("rgPass").value)
+    var name=$("rgName").value.trim(), role=$("rgRole").value, newUser=null, newEmail=$("rgEmail").value.trim();
+    auth.createUserWithEmailAndPassword(newEmail, $("rgPass").value)
       .then(function(cred){
+        newUser=cred.user;
         return db.collection("users").doc(cred.user.uid).set({
           name:name, email:cred.user.email, role:role,
           createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
       })
       .then(function(){
-        showMsg("acctMsg","Account created — you are signed in.", true);
+        if (newUser) return newUser.sendEmailVerification().catch(function(){});
+      })
+      .then(function(){
+        showMsg("acctMsg","Account created — you are signed in. We have emailed a verification link to "+newEmail+": open that email and tap the link to verify your email address.", true);
         if (role==="tutor") location.hash="#/teach";
       })
       .catch(function(e){ showMsg("acctMsg", friendlyErr(e), false); });
@@ -1125,6 +1179,118 @@ function wireAuthForms(){
   var gl=$("btnGoogleLogin"); if (gl) gl.addEventListener("click", function(){ signInWithGoogle("acctMsg", null); });
   var gr=$("btnGoogleRegister"); if (gr) gr.addEventListener("click", function(){ signInWithGoogle("acctMsg", $("rgRole") ? $("rgRole").value : "parent"); });
   var cnicEl=$("tCnic"); if (cnicEl) cnicEl.addEventListener("input", function(){ cnicEl.value = formatCnic(cnicEl.value); });
+}
+
+/* ================= Email verification ================= */
+function updateVerificationUI(){
+  var banner=$("verifyBanner"); if (!banner) return;
+  var needs = !!currentUser && !!currentUser.email && !currentUser.emailVerified;
+  banner.classList.toggle("hidden", !needs);
+  if (needs) $("verifyEmailAddr").textContent = currentUser.email;
+}
+function wireVerificationButtons(){
+  var rs=$("btnResendVerify"); if (rs) rs.addEventListener("click", function(){
+    if (!currentUser) return;
+    currentUser.sendEmailVerification()
+      .then(function(){ showMsg("acctMsg","Verification email sent again to "+currentUser.email+". Open it and tap the link inside.", true); })
+      .catch(function(e){ showMsg("acctMsg", friendlyErr(e), false); });
+  });
+  var rf=$("btnRefreshVerify"); if (rf) rf.addEventListener("click", function(){
+    if (!currentUser) return;
+    currentUser.reload().then(function(){
+      updateVerificationUI();
+      if (currentUser.emailVerified) showMsg("acctMsg","Email verified — thank you!", true);
+      else showMsg("acctMsg","Not verified yet. Open the newest verification email and tap its link, then tap this button again.", false);
+    }).catch(function(e){ showMsg("acctMsg", friendlyErr(e), false); });
+  });
+}
+
+/* ================= Phone sign-up / sign-in (SMS code) =================
+   Firebase Phone Authentication sends a 6-digit code by SMS text message.
+   It cannot send codes on WhatsApp — there is no WhatsApp channel in
+   Firebase Auth. Requires the Phone provider to be enabled once in
+   Firebase Console → Authentication → Sign-in method → Phone. */
+var PHONE_FLOWS = {
+  login:  { phone:"liPhPhone", send:"btnLiSendCode", box:"liPhCodeBox", code:"liPhCode", confirm:"btnLiConfirmCode", captcha:"recaptchaLogin",  sendLabel:"Text me a sign-in code", confirmLabel:"Verify & sign in", verifier:null, confirmation:null },
+  signup: { phone:"rgPhPhone", send:"btnRgSendCode", box:"rgPhCodeBox", code:"rgPhCode", confirm:"btnRgConfirmCode", captcha:"recaptchaRegister", sendLabel:"Text me a code", confirmLabel:"Verify code & create account", verifier:null, confirmation:null }
+};
+function normalizePkPhone(raw){
+  var s = String(raw||"").trim().replace(/[\s()-]/g,"");
+  var d = s.replace(/\D/g,"");
+  if (d.indexOf("0092")===0) d = d.slice(2);
+  if (/^92\d{10}$/.test(d)) return "+"+d;
+  if (/^03\d{9}$/.test(d)) return "+92"+d.slice(1);
+  if (/^\+\d{10,15}$/.test(s)) return s;
+  return null;
+}
+function phoneErr(e){
+  var code=(e && e.code) || "";
+  if (code==="auth/operation-not-allowed") return "Phone sign-in is not switched on for this project yet. The owner must enable it once: Firebase Console → Authentication → Sign-in method → Phone → Enable. Email and Google sign-in work right now.";
+  return friendlyErr(e);
+}
+function sendPhoneCode(mode){
+  var f=PHONE_FLOWS[mode]; hideMsg("acctMsg");
+  if (!firebaseReady || !auth) return showMsg("acctMsg","Phone sign-in is not available right now — the connection to Firebase could not be loaded.", false);
+  var phone=normalizePkPhone($(f.phone).value);
+  if (!phone) return showMsg("acctMsg","Enter a valid mobile number, e.g. 0300-1234567.", false);
+  var btn=$(f.send); btn.disabled=true; btn.textContent="Sending code…";
+  try {
+    if (!f.verifier) f.verifier = new firebase.auth.RecaptchaVerifier(f.captcha, { size:"normal" });
+  } catch(e){ btn.disabled=false; btn.textContent=f.sendLabel; return showMsg("acctMsg", phoneErr(e), false); }
+  auth.signInWithPhoneNumber(phone, f.verifier)
+    .then(function(confirmation){
+      f.confirmation=confirmation;
+      $(f.box).classList.remove("hidden");
+      btn.disabled=false; btn.textContent="Resend code";
+      showMsg("acctMsg","Code sent by SMS to "+phone+". Enter the 6-digit code below to finish.", true);
+    })
+    .catch(function(e){
+      btn.disabled=false; btn.textContent=f.sendLabel;
+      if (f.verifier){ try{ f.verifier.clear(); }catch(_){ } f.verifier=null; var c=$(f.captcha); if (c) c.innerHTML=""; }
+      showMsg("acctMsg", phoneErr(e), false);
+    });
+}
+function confirmPhoneCode(mode){
+  var f=PHONE_FLOWS[mode]; hideMsg("acctMsg");
+  if (!f.confirmation) return showMsg("acctMsg","Tap the “Text me a code” button first, then enter the code from the SMS.", false);
+  var code=$(f.code).value.replace(/\D/g,"");
+  if (!/^\d{6}$/.test(code)) return showMsg("acctMsg","Enter the full 6-digit code from the SMS.", false);
+  var btn=$(f.confirm); btn.disabled=true; btn.textContent="Checking code…";
+  f.confirmation["confirm"](code)
+    .then(function(cred){
+      var user=cred.user;
+      if (!db) return null;
+      var ref=db.collection("users").doc(user.uid);
+      return ref.get().then(function(doc){
+        if (doc.exists){ currentProfile=Object.assign({uid:user.uid}, doc.data()); return currentProfile; }
+        var isSignup = (mode==="signup");
+        var profile={
+          name: isSignup ? $("rgName").value.trim() : "",
+          email: "",
+          phone: user.phoneNumber || "",
+          role: isSignup ? $("rgRole").value : "parent",
+          provider: "phone",
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        if (profile.role!=="tutor" && profile.role!=="parent") profile.role="parent";
+        return ref.set(profile).then(function(){ currentProfile=Object.assign({uid:user.uid}, profile); return currentProfile; });
+      });
+    })
+    .then(function(profile){
+      btn.disabled=false; btn.textContent=f.confirmLabel;
+      renderAuthArea(); refreshAccount();
+      showMsg("acctMsg","Phone number verified — you are signed in.", true);
+      var role = (profile && profile.role) || (currentProfile && currentProfile.role);
+      if (mode==="signup" && role==="tutor") location.hash="#/teach";
+    })
+    .catch(function(e){ btn.disabled=false; btn.textContent=f.confirmLabel; showMsg("acctMsg", phoneErr(e), false); });
+}
+function wirePhoneAuth(){
+  Object.keys(PHONE_FLOWS).forEach(function(mode){
+    var f=PHONE_FLOWS[mode];
+    var s=$(f.send); if (s) s.addEventListener("click", function(){ sendPhoneCode(mode); });
+    var c=$(f.confirm); if (c) c.addEventListener("click", function(){ confirmPhoneCode(mode); });
+  });
 }
 
 function onAuthChanged(user){
@@ -1163,8 +1329,9 @@ function refreshAccount(){
   $("dashPanel").classList.toggle("hidden", !signedIn);
   if (!signedIn) return;
   var p = currentProfile || { name: currentUser.email, role: "parent" };
-  $("dashName").textContent = p.name || currentUser.email;
-  $("dashRole").textContent = (p.role==="tutor" ? "Tutor account" : p.role==="admin" ? "Admin account" : "Parent / student account") + " · " + currentUser.email;
+  $("dashName").textContent = p.name || currentUser.email || currentUser.phoneNumber || "My account";
+  $("dashRole").textContent = (p.role==="tutor" ? "Tutor account" : p.role==="admin" ? "Admin account" : "Parent / student account") + " · " + (currentUser.email || currentUser.phoneNumber || "");
+  updateVerificationUI();
   $("parentDash").classList.toggle("hidden", p.role==="tutor");
   $("tutorDash").classList.toggle("hidden", p.role!=="tutor");
   if (p.role==="tutor") loadTutorDash();
@@ -1413,6 +1580,7 @@ function wireAdmin(){
     var name=$("asName").value.trim();
     auth.createUserWithEmailAndPassword($("asEmail").value.trim(), $("asPass").value)
       .then(function(cred){
+        cred.user.sendEmailVerification().catch(function(){});
         var uid=cred.user.uid;
         return db.collection("admins").doc(uid).set({ name:name, email:cred.user.email, createdAt: firebase.firestore.FieldValue.serverTimestamp() })
           .then(function(){ return db.collection("users").doc(uid).set({ name:name, email:cred.user.email, role:"admin", createdAt: firebase.firestore.FieldValue.serverTimestamp() }); });
@@ -1628,7 +1796,7 @@ function setReviewApproved(id, approved){
 /* ================= Init ================= */
 document.addEventListener("DOMContentLoaded", function(){
   tutorsData=[FOUNDER]; reviewsData=[];
-  wireSearch(); wireAuthForms(); wireTeachForm(); wireRequestDialog(); wireReviewForm(); wireAdmin();
+  wireSearch(); wireAuthForms(); wireVerificationButtons(); wirePhoneAuth(); wireTeachForm(); wireRequestDialog(); wireReviewForm(); wireAdmin();
   renderAuthArea(); loadPublicData(); applyRoute();
   if (firebaseReady && auth){
     auth.getRedirectResult().then(function(result){
