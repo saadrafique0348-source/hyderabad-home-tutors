@@ -32,30 +32,30 @@
     --gold:#b8860b; --gold-bright:#e6c34f; --gold-soft:#f4e9c8;
     --bg:#f4f6f1; --surface:#ffffff; --surface-2:#ecefe7; --ink:#152420; --ink-soft:#45564d;
     --line:#d7dcd0; --danger:#b3261e; --ok:#0a6a4c;
-    --shadow:0 10px 30px rgba(3,33,27,.10);
-    --radius:14px;
+    --shadow:0 18px 44px rgba(3,33,27,.12);
+    --radius:18px;
   }
   @media (prefers-color-scheme: dark){
     :root{
       --bg:#0a120e; --surface:#131f19; --surface-2:#1a2921; --ink:#eef3ef; --ink-soft:#b3c2b8;
       --line:#2a3b31; --gold-soft:#38300f; --emerald-50:#10241c; --emerald-100:#1b382c;
-      --shadow:0 10px 30px rgba(0,0,0,.45);
+      --shadow:0 18px 44px rgba(0,0,0,.5);
     }
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
-  body{margin:0;font-family:"Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+  body{margin:0;font-family:"Libre Franklin",system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;font-size:1.02rem}
   h1,h2,h3,.serif{font-family:"Newsreader",Georgia,serif;font-weight:600;line-height:1.15;margin:0}
   a{color:var(--emerald-700)}
   @media (prefers-color-scheme: dark){ a{color:var(--gold-bright)} }
   button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:2.25rem}
   button{font:inherit;cursor:pointer}
-  input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.55rem .7rem;width:100%}
+  input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.65rem .85rem;width:100%}
   textarea{resize:vertical}
   label{font-weight:600;font-size:.9rem;display:block;margin-bottom:.3rem}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 1rem}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 1.25rem}
   /* ---------- header ---------- */
-  header.site{position:sticky;top:0;z-index:60;background:var(--emerald-950);color:#f4f1e6;box-shadow:0 2px 14px rgba(0,0,0,.25);border-bottom:2px solid var(--gold)}
+  header.site{position:sticky;top:0;z-index:60;background:var(--emerald-950);color:#f4f1e6;box-shadow:0 8px 28px rgba(3,33,27,.16);border-bottom:1px solid rgba(230,195,79,.35)}
   ::selection{background:var(--gold-soft)}
   :focus-visible{outline:2px solid var(--gold);outline-offset:2px;border-radius:4px}
   .site-in{display:flex;align-items:center;gap:.6rem;padding:.55rem 0;flex-wrap:wrap}
@@ -91,7 +91,7 @@
   nav.main{display:flex;gap:.25rem;flex-wrap:wrap;align-items:center}
   nav.main a{color:#f4f1e6;text-decoration:none;padding:.5rem .7rem;border-radius:8px;font-weight:600;font-size:.92rem;min-height:2.25rem;display:inline-flex;align-items:center}
   nav.main a:hover,nav.main a.active{background:rgba(255,255,255,.12)}
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;border:1px solid transparent;border-radius:10px;padding:.55rem 1rem;font-weight:700;text-decoration:none;min-height:2.5rem;font-size:.95rem}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.45rem;border:1px solid transparent;border-radius:999px;padding:.62rem 1.25rem;font-weight:700;text-decoration:none;min-height:2.5rem;font-size:.95rem}
   .btn-gold{background:var(--gold);color:#231a02}
   .btn-gold:hover{background:var(--gold-bright)}
   .btn-emerald{background:var(--emerald-700);color:#fff}
@@ -106,34 +106,34 @@
   .btn-google .gmark{width:20px;height:20px;flex:none;display:grid;place-items:center;background:#fff;border-radius:50%;border:1px solid #e5e0d0;padding:2px}
   .auth-divider{display:flex;align-items:center;gap:.7rem;color:var(--ink-soft);font-size:.82rem;font-weight:600;margin:.2rem 0}
   .auth-divider::before,.auth-divider::after{content:"";flex:1;border-top:1px solid var(--line)}
-  .private-note{background:var(--emerald-50);border:1px solid var(--emerald-100);border-radius:10px;padding:.6rem .75rem;font-size:.86rem;color:var(--ink-soft)}
+  .private-note{background:var(--emerald-50);border:1px solid var(--emerald-100);border-radius:14px;padding:.75rem .9rem;font-size:.86rem;color:var(--ink-soft)}
   .file-input{padding:.5rem .7rem}
   /* ---------- hero ---------- */
-  .hero{background-image:radial-gradient(rgba(230,195,79,.13) 1px, transparent 1.4px),linear-gradient(155deg,var(--emerald-950) 0%,var(--emerald-900) 55%,#0a5a41 100%);background-size:22px 22px,cover;color:#f7f4ea;padding:2.6rem 0 2.2rem;border-bottom:4px solid var(--gold)}
+  .hero{background:radial-gradient(880px 460px at 88% -10%,rgba(230,195,79,.20),rgba(230,195,79,0) 60%),radial-gradient(700px 500px at -10% 110%,rgba(13,133,96,.35),rgba(13,133,96,0) 60%),linear-gradient(152deg,var(--emerald-950) 0%,var(--emerald-900) 52%,#0b6a4a 100%);color:#f7f4ea;padding:3.6rem 0 3.2rem}
   .hero-pill{display:inline-flex;align-items:center;gap:.45rem;border:1px solid var(--gold);color:var(--gold-bright);border-radius:999px;padding:.32rem .8rem;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1rem;background:rgba(230,195,79,.08)}
-  .hero h1{font-size:clamp(1.9rem,5vw,3rem);color:#fdfbf4;max-width:16em}
+  .hero h1{font-size:clamp(2.15rem,5.4vw,3.4rem);color:#fdfbf4;max-width:16em}
   .hero h1 em{font-style:italic;color:var(--gold-bright)}
-  .hero p.lede{color:#dfe9e1;max-width:38em;font-size:1.05rem;margin:.8rem 0 0}
+  .hero p.lede{color:#dfe9e1;max-width:38em;font-size:1.14rem;margin:1rem 0 0}
   .hero-stats{display:flex;gap:1.6rem;flex-wrap:wrap;margin-top:1.4rem}
   .hero-stats div b{display:block;font-size:1.35rem;color:#fff;font-family:"Newsreader",serif}
   .hero-stats div span{font-size:.8rem;color:#cfe0d4;letter-spacing:.04em}
-  .search-card{background:var(--surface);color:var(--ink);border-radius:var(--radius);box-shadow:var(--shadow);padding:1rem;margin-top:1.6rem}
+  .search-card{background:var(--surface);color:var(--ink);border-radius:20px;box-shadow:var(--shadow);padding:1.5rem;margin-top:1.9rem}
   .search-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.7rem;align-items:end}
   .search-actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:.8rem;align-items:center}
   .loc-note{font-size:.88rem;color:var(--ink-soft)}
   /* ---------- sections ---------- */
-  section.block{padding:2.2rem 0 .4rem}
-  .sec-head{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
-  .sec-head h2{font-size:1.65rem;position:relative;padding-bottom:.4rem}
+  section.block{padding:3.4rem 0 .6rem}
+  .sec-head{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-bottom:1.35rem}
+  .sec-head h2{font-size:1.95rem;position:relative;padding-bottom:.4rem}
   .sec-head h2::after{content:"";position:absolute;left:0;bottom:0;width:2.6rem;height:3px;background:var(--gold);border-radius:2px}
   /* ---------- trust strip & FAQ ---------- */
-  .trust-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:.8rem;margin-top:1.6rem}
-  .trust-item{display:flex;gap:.65rem;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.85rem .95rem}
+  .trust-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1rem;margin-top:2rem}
+  .trust-item{display:flex;gap:.65rem;align-items:flex-start;background:var(--surface);border:none;border-radius:16px;padding:1.05rem 1.15rem;box-shadow:0 6px 22px rgba(3,33,27,.06)}
   .trust-item svg{flex:none;margin-top:.1rem}
   .trust-item b{display:block;font-size:.95rem;line-height:1.3}
   .trust-item span{font-size:.85rem;color:var(--ink-soft)}
   .faq{display:grid;gap:.7rem;max-width:820px}
-  .faq details{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.85rem 1.1rem}
+  .faq details{background:var(--surface);border:none;border-radius:16px;padding:1.05rem 1.3rem;box-shadow:0 6px 22px rgba(3,33,27,.06)}
   .faq summary{font-weight:700;cursor:pointer;font-size:1rem}
   .faq details p{margin:.55rem 0 0;color:var(--ink-soft);font-size:.95rem}
   .sec-head p{color:var(--ink-soft);margin:0}
@@ -143,12 +143,12 @@
   .chip.on{background:var(--emerald-700);color:#fff;border-color:var(--emerald-700)}
   .chip .n{background:var(--gold-soft);color:#6b5410;border-radius:999px;padding:0 .45rem;font-size:.75rem;font-weight:800}
   .chip.on .n{background:rgba(255,255,255,.25);color:#fff}
-  #map{height:340px;border-radius:var(--radius);border:1px solid var(--line);z-index:1}
+  #map{height:340px;border-radius:var(--radius);border:none;box-shadow:0 12px 32px rgba(3,33,27,.12);z-index:1}
   .map-fallback{padding:1rem;background:var(--surface-2);border-radius:var(--radius);color:var(--ink-soft)}
   /* ---------- tutor cards ---------- */
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
-  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.1rem;box-shadow:0 2px 10px rgba(3,33,27,.05);display:flex;flex-direction:column;gap:.55rem;transition:box-shadow .2s ease}
-  .card:hover{box-shadow:0 14px 30px rgba(3,33,27,.13)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.3rem}
+  .card{background:var(--surface);border:none;border-radius:var(--radius);padding:1.45rem;box-shadow:0 8px 26px rgba(3,33,27,.07);display:flex;flex-direction:column;gap:.6rem;transition:box-shadow .2s ease}
+  .card:hover{box-shadow:0 18px 40px rgba(3,33,27,.13)}
   .card-top{display:flex;gap:.8rem;align-items:flex-start}
   .avatar{width:52px;height:52px;border-radius:50%;background:var(--emerald-800);color:var(--gold-bright);display:grid;place-items:center;font-family:"Newsreader",serif;font-size:1.25rem;font-weight:700;flex:none}
   .card h3{font-size:1.2rem}
@@ -167,19 +167,19 @@
   .stars{color:var(--gold);letter-spacing:.1em;font-size:.95rem}
   .stars .off{color:var(--line)}
   /* ---------- steps ---------- */
-  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;counter-reset:step}
-  .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.3rem;counter-reset:step}
+  .step{background:var(--surface);border:none;border-radius:var(--radius);padding:1.35rem;box-shadow:0 8px 26px rgba(3,33,27,.07)}
   .step .num{width:34px;height:34px;border-radius:50%;background:var(--emerald-700);color:#fff;display:grid;place-items:center;font-weight:800;margin-bottom:.5rem;box-shadow:0 0 0 3px var(--gold-soft)}
   .step h3{font-size:1.05rem;margin-bottom:.3rem}
   .step p{margin:0;color:var(--ink-soft);font-size:.92rem}
   /* ---------- ads ---------- */
-  .ad-slot{border:1.5px dashed var(--gold);background:var(--surface);border-radius:var(--radius);padding:1rem 1.2rem;text-align:center;margin:1.6rem 0 .4rem}
+  .ad-slot{border:none;background:linear-gradient(135deg,var(--gold-soft),var(--surface));border-radius:var(--radius);padding:1.5rem 1.2rem;text-align:center;margin:2rem 0 .4rem;box-shadow:inset 0 0 0 1px rgba(184,134,11,.16)}
   .ad-slot .ad-kicker{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#8a6d1c;font-weight:800}
   .ad-slot .ad-body{font-family:"Newsreader",serif;font-size:1.15rem;color:#4a3a05}
   .ad-slot a{font-weight:700}
   @media (prefers-color-scheme: dark){ .ad-slot .ad-body{color:var(--gold-bright)} .ad-slot .ad-kicker{color:var(--gold)} }
   /* ---------- reviews ---------- */
-  .review{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1rem}
+  .review{background:var(--surface);border:none;border-radius:var(--radius);padding:1.35rem;box-shadow:0 8px 26px rgba(3,33,27,.07)}
   .review p{margin:.35rem 0 0}
   /* Review form tutor picker: span the full panel width so a tutor's full
      name and subjects are never truncated with an ellipsis. */
@@ -187,18 +187,18 @@
   #rvTutor{width:100%;min-width:0;white-space:normal;text-overflow:clip;height:auto}
   #rvTutor option{white-space:normal;overflow-wrap:anywhere}
   /* ---------- forms / panels ---------- */
-  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:1.2rem;box-shadow:0 2px 10px rgba(4,36,26,.05)}
-  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.9rem}
+  .panel{background:var(--surface);border:none;border-radius:var(--radius);padding:1.7rem;box-shadow:0 12px 34px rgba(4,36,26,.09)}
+  .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.1rem}
   .form-grid .full{grid-column:1/-1}
   .tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
   .tabs button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:.45rem .95rem;font-weight:700;min-height:2.5rem}
   .tabs button.on{background:var(--emerald-700);color:#fff;border-color:var(--emerald-700)}
-  .msg{border-radius:10px;padding:.7rem .9rem;font-size:.92rem;margin:.7rem 0;display:none}
+  .msg{border-radius:12px;padding:.8rem 1rem;font-size:.92rem;margin:.7rem 0;display:none}
   .msg.show{display:block}
   .msg.err{background:#fdeceb;color:#7a130d;border:1px solid #f3c1bd}
   .msg.ok{background:var(--emerald-50);color:var(--emerald-800);border:1px solid var(--emerald-100)}
   @media (prefers-color-scheme: dark){ .msg.err{background:#3d1512;color:#ffb4ab} .msg.ok{color:#a7e8cd} }
-  .verify-banner{background:var(--gold-soft);border:1px solid var(--gold);border-radius:var(--radius);padding:.9rem 1.1rem;margin-top:1rem}
+  .verify-banner{background:var(--gold-soft);border:none;border-radius:var(--radius);padding:1.25rem 1.45rem;margin-top:1rem;box-shadow:inset 0 0 0 1px rgba(184,134,11,.35)}
   .verify-banner p{margin:0 0 .6rem}
   .code-input{letter-spacing:.35em;font-size:1.15rem;font-weight:700;text-align:center;max-width:230px}
   table.tbl{width:100%;border-collapse:collapse;font-size:.92rem}
@@ -208,10 +208,10 @@
   .rowline{display:flex;gap:.6rem;flex-wrap:wrap;align-items:center}
   .muted{color:var(--ink-soft)}
   .small{font-size:.86rem}
-  dialog{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);color:var(--ink);max-width:520px;width:calc(100% - 2rem);padding:1.3rem;box-shadow:var(--shadow)}
+  dialog{border:none;border-radius:20px;background:var(--surface);color:var(--ink);max-width:520px;width:calc(100% - 2rem);padding:1.7rem;box-shadow:var(--shadow)}
   dialog::backdrop{background:rgba(4,36,26,.55)}
   pre.rules{background:var(--emerald-950);color:#d9ecd9;border-radius:var(--radius);padding:1rem;overflow:auto;font-size:.78rem;line-height:1.5;max-height:480px;white-space:pre}
-  footer.site{margin-top:3rem;background:var(--emerald-950);color:#cfdccf;padding:2rem 0 2.4rem;border-top:4px solid var(--gold)}
+  footer.site{margin-top:4.5rem;background:var(--emerald-950);color:#cfdccf;padding:2.6rem 0 2.8rem;border-top:1px solid rgba(230,195,79,.35)}
   footer.site a{color:var(--gold-bright)}
   footer.site .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.4rem}
   footer.site h3{color:#fff;font-size:1.05rem;margin-bottom:.5rem}
@@ -221,7 +221,21 @@
   .rate-input{display:flex;gap:.3rem;font-size:1.5rem}
   .rate-input button{background:none;border:none;color:var(--line);padding:.2rem;min-height:2.25rem}
   .rate-input button.lit{color:var(--gold)}
-  @media (max-width:640px){ .hero{padding:1.8rem 0 1.6rem} #map{height:280px} }
+  @media (max-width:640px){ .hero{padding:2.4rem 0 2.2rem} #map{height:280px} }
+  /* ---------- sign-in gate (signed-out landing) ---------- */
+  body.gated{background:linear-gradient(165deg,var(--emerald-50) 0%,var(--bg) 60%)}
+  body.gated header.site,body.gated footer.site{display:none}
+  body.gated #view-account .wrap{max-width:620px;padding-top:2.8rem !important;padding-bottom:3.2rem}
+  body.gated #acctTitle{display:none}
+  body.gated #acctMsg{max-width:560px;margin-left:auto;margin-right:auto}
+  body.gated #authPanel{margin:0 auto !important;box-shadow:0 24px 60px rgba(3,33,27,.16);border-radius:22px;padding:1.9rem}
+  .auth-intro{text-align:center;margin:0 auto 1.5rem;max-width:560px}
+  .auth-logo{width:76px;height:76px;border-radius:20px;box-shadow:0 12px 28px rgba(3,33,27,.22)}
+  .auth-name{font-size:2.05rem;margin-top:.85rem}
+  .auth-tag{color:var(--ink-soft);margin:.5rem auto 0;font-size:1.03rem}
+  .guest-row{text-align:center;margin:1.15rem auto 0;font-size:.88rem;color:var(--ink-soft)}
+  .guest-row a{font-weight:600}
+  @media (max-width:640px){ body.gated #authPanel{padding:1.35rem} .auth-name{font-size:1.65rem} .auth-logo{width:64px;height:64px} }
   /* ---------- AI assistant chat widget ---------- */
   .ai-fab{position:fixed;right:1rem;bottom:1rem;z-index:200;width:56px;height:56px;border-radius:50%;border:2px solid #fff;background:linear-gradient(135deg,#2563eb,#4f46e5 55%,#7c3aed);color:#fff;display:grid;place-items:center;box-shadow:0 10px 26px rgba(37,60,180,.45);padding:0;animation:aiPulse 2.2s ease-out infinite}
   .ai-fab:hover{filter:brightness(1.12)}
@@ -462,7 +476,12 @@
 <!-- ======================= ACCOUNT VIEW ======================= -->
 <div id="view-account" class="hidden">
   <div class="wrap" style="padding-top:2rem">
-    <h2 style="font-size:1.9rem">My Account</h2>
+    <h2 id="acctTitle" style="font-size:1.9rem">My Account</h2>
+    <div id="authIntro" class="auth-intro hidden">
+      <img class="auth-logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NiA5NiIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJIeWRlcmFiYWQgSG9tZSBUdXRvcnMgbG9nbyI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImhodC1iZyIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMwYTZhNGMiLz4KICAgICAgPHN0b3Agb2Zmc2V0PSIwLjU1IiBzdG9wLWNvbG9yPSIjMDYzOTJhIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iIzA0MjQxYSIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPCEtLSBFbWVyYWxkIGJhZGdlIC0tPgogIDxyZWN0IHg9IjMiIHk9IjMiIHdpZHRoPSI5MCIgaGVpZ2h0PSI5MCIgcng9IjIyIiBmaWxsPSJ1cmwoI2hodC1iZykiLz4KICA8cmVjdCB4PSIzIiB5PSIzIiB3aWR0aD0iOTAiIGhlaWdodD0iOTAiIHJ4PSIyMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzlhMjI3IiBzdHJva2Utd2lkdGg9IjIuNSIvPgogIDxyZWN0IHg9IjguNSIgeT0iOC41IiB3aWR0aD0iNzkiIGhlaWdodD0iNzkiIHJ4PSIxNyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZTdjNjVhIiBzdHJva2Utd2lkdGg9IjEiIG9wYWNpdHk9IjAuNDUiLz4KICA8IS0tIEdvbGQgcm9vZmxpbmU6IHRoZSBob21lIC0tPgogIDxwYXRoIGQ9Ik0yNSA0My41IEw0OCAyNS41IEw3MSA0My41IiBmaWxsPSJub25lIiBzdHJva2U9IiNlN2M2NWEiIHN0cm9rZS13aWR0aD0iNS41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KICA8IS0tIE9wZW4gYm9vazogdGhlIHR1aXRpb24gLS0+CiAgPHBhdGggZD0iTTI5IDU0LjUgQzM1IDUxLCA0MiA1MSwgNDggNTUuNSBMNDggNzEuNSBDNDIgNjcsIDM1IDY3LCAyOSA3MC41IFoiIGZpbGw9IiNmYmY4ZWUiLz4KICA8cGF0aCBkPSJNNjcgNTQuNSBDNjEgNTEsIDU0IDUxLCA0OCA1NS41IEw0OCA3MS41IEM1NCA2NywgNjEgNjcsIDY3IDcwLjUgWiIgZmlsbD0iI2YxZTlkMiIvPgogIDxwYXRoIGQ9Ik0yOSA1NC41IEMzNSA1MSwgNDIgNTEsIDQ4IDU1LjUgQzU0IDUxLCA2MSA1MSwgNjcgNTQuNSBMNjcgNzAuNSBDNjEgNjcsIDU0IDY3LCA0OCA3MS41IEM0MiA2NywgMzUgNjcsIDI5IDcwLjUgWiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYzlhMjI3IiBzdHJva2Utd2lkdGg9IjEuNiIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxsaW5lIHgxPSI0OCIgeTE9IjU1LjUiIHgyPSI0OCIgeTI9IjcxLjUiIHN0cm9rZT0iI2M5YTIyNyIgc3Ryb2tlLXdpZHRoPSIxLjYiLz4KICA8IS0tIFBhZ2UgbGluZXMgLS0+CiAgPHBhdGggZD0iTTMzLjUgNTkgQzM2LjUgNTcuNCwgNDAgNTcuMywgNDMuNSA1OC44IiBmaWxsPSJub25lIiBzdHJva2U9IiMwYTZhNGMiIHN0cm9rZS13aWR0aD0iMS43IiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuNTUiLz4KICA8cGF0aCBkPSJNMzMuNSA2NCBDMzYuNSA2Mi40LCA0MCA2Mi4zLCA0My41IDYzLjgiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzBhNmE0YyIgc3Ryb2tlLXdpZHRoPSIxLjciIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgb3BhY2l0eT0iMC41NSIvPgogIDxwYXRoIGQ9Ik01Mi41IDU4LjggQzU2IDU3LjMsIDU5LjUgNTcuNCwgNjIuNSA1OSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMGE2YTRjIiBzdHJva2Utd2lkdGg9IjEuNyIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBvcGFjaXR5PSIwLjU1Ii8+CiAgPHBhdGggZD0iTTUyLjUgNjMuOCBDNTYgNjIuMywgNTkuNSA2Mi40LCA2Mi41IDY0IiBmaWxsPSJub25lIiBzdHJva2U9IiMwYTZhNGMiIHN0cm9rZS13aWR0aD0iMS43IiBzdHJva2UtbGluZWNhcD0icm91bmQiIG9wYWNpdHk9IjAuNTUiLz4KICA8IS0tIEdvbGQgZmxvdXJpc2ggdW5kZXIgdGhlIGJvb2sgLS0+CiAgPGxpbmUgeDE9IjM0IiB5MT0iNzkuNSIgeDI9IjQzLjUiIHkyPSI3OS41IiBzdHJva2U9IiNjOWEyMjciIHN0cm9rZS13aWR0aD0iMi42IiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8bGluZSB4MT0iNTIuNSIgeTE9Ijc5LjUiIHgyPSI2MiIgeTI9Ijc5LjUiIHN0cm9rZT0iI2M5YTIyNyIgc3Ryb2tlLXdpZHRoPSIyLjYiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik00OCA3NS44IEw1MS4yIDc5LjUgTDQ4IDgzLjIgTDQ0LjggNzkuNSBaIiBmaWxsPSIjZTdjNjVhIi8+Cjwvc3ZnPgo=" alt="Hyderabad Home Tutors official logo" width="76" height="76" />
+      <h1 class="auth-name">Hyderabad Home Tutors</h1>
+      <p class="auth-tag">Find verified home tutors in Hyderabad, matched to your area.</p>
+    </div>
     <div class="msg" id="acctMsg"></div>
 
     <div id="authPanel" class="panel" style="max-width:560px;margin-top:1rem">
@@ -529,6 +548,8 @@
         </div>
       </form>
     </div>
+
+    <p id="guestRow" class="guest-row hidden">Just visiting? <a href="#/" id="guestLink">Continue as guest — browse tutors</a></p>
 
     <div id="dashPanel" class="hidden" style="margin-top:1rem">
       <div id="verifyBanner" class="verify-banner hidden">
@@ -819,6 +840,7 @@ var currentUser=null, currentProfile=null, currentIsAdmin=false;
 var tutorsData=[], reviewsData=[], settingsData={ adTop:{text:"",link:""}, adMid:{text:"",link:""}, feeEnabled:false, feePercent:10 };
 var userLoc=null, mapObj=null, mapMarkers=[];
 var reviewRating=0, requestTutorId=null;
+var guestBrowse=false; /* in-memory only: a signed-out visitor who chose "Continue as guest" */
 
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
@@ -1184,14 +1206,31 @@ function currentRoute(){
   if (h==="/#how") return "home";
   return VIEWS.hasOwnProperty(h) ? VIEWS[h] : "home";
 }
+/* Sign-in first: a signed-out visitor lands on the sign-in / register
+   screen (the account view in gated mode) before anything else. The
+   private admin route keeps its own gate, and a visitor who chose
+   "Continue as guest" can browse the public platform — except My
+   Account, which always asks for sign-in first. */
+function isGated(){
+  if (currentUser) return false;
+  var r = currentRoute();
+  if (r==="admin") return false;
+  if (r==="account") return true;
+  return !guestBrowse;
+}
 function applyRoute(){
   var r = currentRoute();
-  ["home","teach","account","admin"].forEach(function(v){ $("view-"+v).classList.toggle("hidden", v!==r); });
-  document.querySelectorAll("[data-nav]").forEach(function(a){ a.classList.toggle("active", a.getAttribute("data-nav")===r); });
-  if (r==="home") setTimeout(drawMap, 60);
-  if (r==="teach") refreshTeachGate();
-  if (r==="account") refreshAccount();
-  if (r==="admin") refreshAdminGate();
+  var gated = isGated();
+  document.body.classList.toggle("gated", gated);
+  var show = gated ? "account" : r;
+  ["home","teach","account","admin"].forEach(function(v){ $("view-"+v).classList.toggle("hidden", v!==show); });
+  document.querySelectorAll("[data-nav]").forEach(function(a){ a.classList.toggle("active", a.getAttribute("data-nav")===show); });
+  var intro=$("authIntro"); if (intro) intro.classList.toggle("hidden", !gated);
+  var grow=$("guestRow"); if (grow) grow.classList.toggle("hidden", !gated);
+  if (show==="home") setTimeout(drawMap, 60);
+  if (show==="teach") refreshTeachGate();
+  if (show==="account") refreshAccount();
+  if (show==="admin") refreshAdminGate();
   window.scrollTo(0,0);
 }
 window.addEventListener("hashchange", applyRoute);
@@ -1207,7 +1246,7 @@ function renderAuthArea(){
     box.innerHTML = '<a class="btn btn-gold btn-sm" href="#/account" style="min-height:2.25rem">Sign in</a>';
   }
 }
-function signOut(){ if (auth) auth.signOut(); }
+function signOut(){ guestBrowse=false; if (auth) auth.signOut(); }
 
 /* ================= Auth flows ================= */
 function friendlyErr(e){
@@ -1259,6 +1298,7 @@ function signInWithGoogle(msgId, preferredRole){
     .then(function(cred){ return ensureGoogleProfile(cred.user, preferredRole); })
     .then(function(){
       showMsg(msgId, "Signed in with Google. Welcome!", true);
+      renderAuthArea(); refreshAccount(); applyRoute();
       var role = (currentProfile && currentProfile.role) || preferredRole;
       try { role = sessionStorage.getItem("hht_google_role") || role; } catch(e){}
       if (preferredRole==="tutor" || role==="tutor") location.hash="#/teach";
@@ -1288,7 +1328,7 @@ function wireAuthForms(){
     ev.preventDefault(); hideMsg("acctMsg");
     if (!firebaseReady) return showMsg("acctMsg","Sign-in is not available right now — the connection to Firebase could not be loaded.", false);
     auth.signInWithEmailAndPassword($("liEmail").value.trim(), $("liPass").value)
-      .then(function(){ showMsg("acctMsg","Signed in. Welcome back!", true); })
+      .then(function(){ showMsg("acctMsg","Signed in. Welcome back!", true); renderAuthArea(); refreshAccount(); applyRoute(); })
       .catch(function(e){ showMsg("acctMsg", friendlyErr(e), false); });
   });
 
@@ -1313,14 +1353,23 @@ function wireAuthForms(){
         return sendEmailCodeForUser(newUser);
       })
       .then(function(sent){
-        if (sent) showMsg("acctMsg","Account created — you are signed in. We have emailed a 6-digit verification code to "+newEmail+": enter it in the verification box in My Account to verify your email. The code expires in 10 minutes.", true);
-        else showMsg("acctMsg","Account created — you are signed in, but the verification code could not be sent — please try again from the verification box in My Account.", false);
+        if (sent) showMsg("acctMsg","Account created — you are signed in. We have emailed a 6-digit verification code to "+newEmail+": enter it in the verification box below to verify your email. The code expires in 10 minutes.", true);
+        else showMsg("acctMsg","Account created — you are signed in, but the verification code could not be sent — please try again from the verification box below.", false);
+        /* Show the dashboard + verification box immediately, without a
+           reload: a code was just sent, so mark the auto-send as done,
+           then refresh the account view and lift the sign-in gate now. */
+        try { emailCodeAutoSentFor = newUser.uid; sessionStorage.setItem("hht_code_autosent_" + newUser.uid, "1"); } catch(e){}
+        renderAuthArea(); refreshAccount(); applyRoute();
         if (role==="tutor") location.hash="#/teach";
       })
       .catch(function(e){ showMsg("acctMsg", friendlyErr(e), false); });
   });
 
   var so2=$("btnSignOut2"); if (so2) so2.addEventListener("click", signOut);
+  var gst=$("guestLink"); if (gst) gst.addEventListener("click", function(ev){
+    ev.preventDefault(); guestBrowse=true;
+    if (currentRoute()==="account") location.hash="#/"; else applyRoute();
+  });
   var gl=$("btnGoogleLogin"); if (gl) gl.addEventListener("click", function(){ signInWithGoogle("acctMsg", null); });
   var gr=$("btnGoogleRegister"); if (gr) gr.addEventListener("click", function(){ signInWithGoogle("acctMsg", $("rgRole") ? $("rgRole").value : "parent"); });
   var cnicEl=$("tCnic"); if (cnicEl) cnicEl.addEventListener("input", function(){ cnicEl.value = formatCnic(cnicEl.value); });
@@ -1579,7 +1628,7 @@ function confirmPhoneCode(mode){
     })
     .then(function(profile){
       btn.disabled=false; btn.textContent=f.confirmLabel;
-      renderAuthArea(); refreshAccount();
+      renderAuthArea(); refreshAccount(); applyRoute();
       showMsg("acctMsg","Phone number verified — you are signed in.", true);
       var role = (profile && profile.role) || (currentProfile && currentProfile.role);
       if (mode==="signup" && role==="tutor") location.hash="#/teach";
@@ -1597,12 +1646,28 @@ function wirePhoneAuth(){
 function onAuthChanged(user){
   currentUser=user; currentProfile=null; currentIsAdmin=false;
   renderAuthArea();
-  if (!user){ refreshAccount(); refreshTeachGate(); if (currentRoute()==="admin") refreshAdminGate(); return; }
-  if (!db) return;
+  /* Flip the sign-in form / dashboard (and lift the sign-in gate)
+     immediately — do not wait for the profile fetch below, or a
+     just-registered user keeps seeing the sign-in form until a reload
+     even though the header already shows their name. */
+  refreshAccount();
+  if (!user){ refreshTeachGate(); if (currentRoute()==="admin") refreshAdminGate(); applyRoute(); return; }
+  if (!db){ applyRoute(); return; }
   db.collection("users").doc(user.uid).get()
     .then(function(doc){
       if (doc.exists) currentProfile=Object.assign({uid:user.uid}, doc.data());
       else if (isGoogleUser(user)) return ensureGoogleProfile(user, null);
+      else {
+        /* Registration writes the profile a moment after this auth event
+           fires, so the first read can miss it — re-read once shortly
+           after so the dashboard and verification box appear on their own. */
+        setTimeout(function(){
+          if (!currentUser || currentUser.uid!==user.uid || !db) return;
+          db.collection("users").doc(user.uid).get().then(function(d2){
+            if (d2.exists){ currentProfile=Object.assign({uid:user.uid}, d2.data()); renderAuthArea(); refreshAccount(); }
+          }).catch(function(){});
+        }, 900);
+      }
     })
     .catch(function(){})
     .then(function(){
@@ -1613,6 +1678,7 @@ function onAuthChanged(user){
     .then(function(){
       renderAuthArea(); refreshAccount(); refreshTeachGate();
       if (currentRoute()==="admin") refreshAdminGate();
+      applyRoute();
       var pending = sessionStorage.getItem("hht_pending_tutor");
       if (pending && currentProfile && currentProfile.role==="parent"){
         sessionStorage.removeItem("hht_pending_tutor");
