@@ -666,6 +666,10 @@
     .td-fee-row{flex-direction:column;align-items:stretch;text-align:center}
     .td-fee-row .btn{width:100%}
   }
+
+/* Required / optional markers (Saad): red star = must fill, grey (optional) = can leave blank. */
+.req{color:var(--danger);font-weight:700}
+.opt{color:#6b7280;font-weight:500;font-size:.82em}
 </style>
 </head>
 <body>
@@ -787,15 +791,15 @@
         <form id="reviewForm">
           <div class="form-grid">
             <div>
-              <label for="rvTutor">Tutor (only tutors you were matched with)</label>
+              <label for="rvTutor">Tutor (only tutors you were matched with) <span class="req">*</span></label>
               <select id="rvTutor" required></select>
             </div>
             <div>
-              <label>Your rating</label>
+              <label>Your rating <span class="req">*</span></label>
               <div class="rate-input" id="rvStars" role="radiogroup" aria-label="Star rating"></div>
             </div>
             <div class="full">
-              <label for="rvText">Your review</label>
+              <label for="rvText">Your review <span class="req">*</span></label>
               <textarea id="rvText" rows="3" required placeholder="How were the lessons? Punctuality, teaching style, results…"></textarea>
             </div>
           </div>
@@ -854,23 +858,23 @@
       <div id="teachGate" class="muted">Checking your account…</div>
       <form id="teachForm" class="hidden">
         <div class="form-grid">
-          <div><label for="tName">Full name</label><input id="tName" required /></div>
-          <div><label for="tPhone">Phone / WhatsApp</label><input id="tPhone" required placeholder="03xx-xxxxxxx" /></div>
-          <div><label for="tCnic">CNIC number (for verification)</label><input id="tCnic" required inputmode="numeric" autocomplete="off" maxlength="15" placeholder="35202-1234567-1" /><span class="small muted">Format: XXXXX-XXXXXXX-X · Admin only — never shown publicly.</span></div>
-          <div><label for="tCnicPhoto">CNIC card photo — front side</label><input id="tCnicPhoto" class="file-input" type="file" accept="image/*" /><span class="small muted" id="tCnicPhotoNote">Upload a clear photo of the front of your CNIC card. Large photos are compressed automatically in your browser and stored privately for the admin only.</span><span id="tCnicPhotoPreviewWrap" style="display:none;margin-top:.55rem"><img id="tCnicPhotoPreview" alt="Preview of your CNIC photo" style="display:block;max-width:220px;max-height:160px;width:auto;height:auto;border-radius:8px;border:1px solid var(--line)" /><span class="small muted" id="tCnicPhotoSize" style="display:block;margin-top:.3rem"></span></span><span class="small" id="tCnicPhotoErr" role="alert" style="display:none;color:var(--danger);font-weight:700"></span></div>
-          <div class="full"><label for="tAddress">Full home address</label><textarea id="tAddress" rows="2" required placeholder="House / street / block / area / city — e.g. House 12, Street 3, Qasimabad, Hyderabad"></textarea><span class="small muted">Admin only — your public listing shows only your base area below, never this full address.</span></div>
-          <div><label for="tArea">Base area (where you teach from)</label><select id="tArea" required></select></div>
-          <div><label for="tFee">Monthly fee (Rs) — per student</label><input id="tFee" type="number" min="0" step="100" required placeholder="e.g. 8000" /></div>
-          <div class="full"><label for="tSubjects">Subjects (comma separated)</label><input id="tSubjects" required placeholder="e.g. Computer Science, Mathematics" /></div>
-          <div class="full"><label for="tClasses">Classes / levels (comma separated)</label><input id="tClasses" required placeholder="e.g. Class 9, Class 10, Intermediate, BS level" /></div>
-          <div><label for="tQual">Qualification</label><input id="tQual" required placeholder="e.g. BS Computer Science (in progress), GCUH" /></div>
-          <div><label for="tExp">Experience</label><input id="tExp" required placeholder="e.g. 2 years home tuition" /></div>
-          <div class="full"><label for="tBio">Short bio</label><textarea id="tBio" rows="3" placeholder="Your teaching style, results, languages…"></textarea></div>
+          <div><label for="tName">Full name <span class="req">*</span></label><input id="tName" required /></div>
+          <div><label for="tPhone">Phone / WhatsApp <span class="req">*</span></label><input id="tPhone" required placeholder="03xx-xxxxxxx" /></div>
+          <div><label for="tCnic">CNIC number (for verification) <span class="req">*</span></label><input id="tCnic" required inputmode="numeric" autocomplete="off" maxlength="15" placeholder="35202-1234567-1" /><span class="small muted">Format: XXXXX-XXXXXXX-X · Admin only — never shown publicly.</span></div>
+          <div><label for="tCnicPhoto">CNIC card photo — front side <span class="opt">(optional)</span></label><input id="tCnicPhoto" class="file-input" type="file" accept="image/*" /><span class="small muted" id="tCnicPhotoNote">Upload a clear photo of the front of your CNIC card. Large photos are compressed automatically in your browser and stored privately for the admin only.</span><span id="tCnicPhotoPreviewWrap" style="display:none;margin-top:.55rem"><img id="tCnicPhotoPreview" alt="Preview of your CNIC photo" style="display:block;max-width:220px;max-height:160px;width:auto;height:auto;border-radius:8px;border:1px solid var(--line)" /><span class="small muted" id="tCnicPhotoSize" style="display:block;margin-top:.3rem"></span></span><span class="small" id="tCnicPhotoErr" role="alert" style="display:none;color:var(--danger);font-weight:700"></span></div>
+          <div class="full"><label for="tAddress">Full home address <span class="req">*</span></label><textarea id="tAddress" rows="2" required placeholder="House / street / block / area / city — e.g. House 12, Street 3, Qasimabad, Hyderabad"></textarea><span class="small muted">Admin only — your public listing shows only your base area below, never this full address.</span></div>
+          <div><label for="tArea">Base area (where you teach from) <span class="req">*</span></label><select id="tArea" required></select></div>
+          <div><label for="tFee">Monthly fee (Rs) — per student <span class="req">*</span></label><input id="tFee" type="number" min="0" step="100" required placeholder="e.g. 8000" /></div>
+          <div class="full"><label for="tSubjects">Subjects (comma separated) <span class="req">*</span></label><input id="tSubjects" required placeholder="e.g. Computer Science, Mathematics" /></div>
+          <div class="full"><label for="tClasses">Classes / levels (comma separated) <span class="req">*</span></label><input id="tClasses" required placeholder="e.g. Class 9, Class 10, Intermediate, BS level" /></div>
+          <div><label for="tQual">Qualification <span class="req">*</span></label><input id="tQual" required placeholder="e.g. BS Computer Science (in progress), GCUH" /></div>
+          <div><label for="tExp">Experience <span class="req">*</span></label><input id="tExp" required placeholder="e.g. 2 years home tuition" /></div>
+          <div class="full"><label for="tBio">Short bio <span class="opt">(optional)</span></label><textarea id="tBio" rows="3" placeholder="Your teaching style, results, languages…"></textarea></div>
         </div>
         <div style="margin-top:1rem">
           <label for="tConsent" style="display:flex;gap:.6rem;align-items:flex-start;font-weight:500;cursor:pointer">
             <input type="checkbox" id="tConsent" required style="width:auto;min-height:0;padding:0;margin-top:.35rem;flex:none" />
-            <span>I agree to the <a href="#/legal">Privacy Policy &amp; Terms</a>, and I agree to identity verification using the CNIC number and CNIC photo I provided. I understand my CNIC and full home address are kept admin-only and are never shown publicly.</span>
+            <span>I agree to the <a href="#/legal">Privacy Policy &amp; Terms</a>, and I agree to identity verification using the CNIC number and CNIC photo I provided. I understand my CNIC and full home address are kept admin-only and are never shown publicly. <span class="req">*</span></span>
           </label>
         </div>
         <div class="rowline" style="margin-top:.9rem">
@@ -900,20 +904,20 @@
       </div>
       <form id="loginForm">
         <div class="stack" style="gap:.7rem">
-          <div><label for="liEmail">Email</label><input id="liEmail" type="email" required autocomplete="email" /></div>
-          <div><label for="liPass">Password</label><input id="liPass" type="password" required autocomplete="current-password" /></div>
+          <div><label for="liEmail">Email <span class="req">*</span></label><input id="liEmail" type="email" required autocomplete="email" /></div>
+          <div><label for="liPass">Password <span class="req">*</span></label><input id="liPass" type="password" required autocomplete="current-password" /></div>
           <p style="margin:0"><a href="#/account" id="forgotLink">Forgot password?</a></p>
           <button class="btn btn-emerald" type="submit">Sign in</button>
           <div class="auth-divider">or</div>
           <button class="btn btn-google" type="button" id="btnGoogleLogin"><span class="gmark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg></span> Continue with Google</button>
           <div class="auth-divider">or</div>
           <div>
-            <label for="liPhPhone">Sign in with your phone number</label>
+            <label for="liPhPhone">Sign in with your phone number <span class="req">*</span></label>
             <input id="liPhPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="03xx-xxxxxxx" />
             <p class="small muted" style="margin:.35rem 0 .55rem">We text a 6-digit code to this number by SMS. Firebase sends these codes by SMS text message only — a code cannot be sent on WhatsApp.</p>
             <button class="btn btn-ghost" type="button" id="btnLiSendCode" style="width:100%">Text me a sign-in code</button>
             <div id="liPhCodeBox" class="hidden" style="margin-top:.6rem">
-              <label for="liPhCode">6-digit code from the SMS</label>
+              <label for="liPhCode">6-digit code from the SMS <span class="req">*</span></label>
               <div class="rowline">
                 <input id="liPhCode" class="code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="––––––" />
                 <button class="btn btn-emerald" type="button" id="btnLiConfirmCode">Verify &amp; sign in</button>
@@ -925,9 +929,9 @@
       </form>
       <form id="registerForm" class="hidden">
         <div class="stack" style="gap:.7rem">
-          <div><label for="rgName">Full name</label><input id="rgName" required autocomplete="name" /></div>
-          <div><label for="rgEmail">Email</label><input id="rgEmail" type="email" required autocomplete="email" /></div>
-          <div><label for="rgPass">Password (6+ characters)</label><input id="rgPass" type="password" required minlength="6" autocomplete="new-password" /></div>
+          <div><label for="rgName">Full name <span class="req">*</span></label><input id="rgName" required autocomplete="name" /></div>
+          <div><label for="rgEmail">Email <span class="req">*</span></label><input id="rgEmail" type="email" required autocomplete="email" /></div>
+          <div><label for="rgPass">Password (6+ characters) <span class="req">*</span></label><input id="rgPass" type="password" required minlength="6" autocomplete="new-password" /></div>
           <div>
             <label for="rgRole">I am joining as</label>
             <select id="rgRole">
@@ -942,12 +946,12 @@
           <p class="small muted" style="margin:0">With Google, your account is created instantly. If you chose “Tutor” above, that choice is kept and you will be taken to the tutor application.</p>
           <div class="auth-divider">or</div>
           <div>
-            <label for="rgPhPhone">Create your account with your phone number</label>
+            <label for="rgPhPhone">Create your account with your phone number <span class="req">*</span></label>
             <input id="rgPhPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="03xx-xxxxxxx" />
             <p class="small muted" style="margin:.35rem 0 .55rem">We text a 6-digit code to this number by SMS — entering it creates your account and verifies the number. Firebase sends these codes by SMS text message only, so the code cannot arrive on WhatsApp. Your name and “joining as” choice above are saved to the account.</p>
             <button class="btn btn-ghost" type="button" id="btnRgSendCode" style="width:100%">Text me a code</button>
             <div id="rgPhCodeBox" class="hidden" style="margin-top:.6rem">
-              <label for="rgPhCode">6-digit code from the SMS</label>
+              <label for="rgPhCode">6-digit code from the SMS <span class="req">*</span></label>
               <div class="rowline">
                 <input id="rgPhCode" class="code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="––––––" />
                 <button class="btn btn-emerald" type="button" id="btnRgConfirmCode">Verify code &amp; create account</button>
@@ -1040,8 +1044,8 @@
       <h3 style="margin-bottom:.6rem">Admin sign in</h3>
       <form id="adminLoginForm">
         <div class="stack" style="gap:.7rem">
-          <div><label for="adEmail">Email</label><input id="adEmail" type="email" required /></div>
-          <div><label for="adPass">Password</label><input id="adPass" type="password" required /></div>
+          <div><label for="adEmail">Email <span class="req">*</span></label><input id="adEmail" type="email" required /></div>
+          <div><label for="adPass">Password <span class="req">*</span></label><input id="adPass" type="password" required /></div>
           <button class="btn btn-emerald" type="submit">Sign in to Admin</button>
           <div class="auth-divider">or</div>
           <button class="btn btn-google" type="button" id="btnGoogleAdmin"><span class="gmark" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 8 3l5.7-5.7C34.3 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg></span> Continue with Google</button>
@@ -1159,12 +1163,12 @@
   <div class="msg" id="reqMsg"></div>
   <form id="reqForm" method="dialog">
     <div class="stack" style="gap:.7rem">
-      <div><label for="rqClass">Student's class</label><input id="rqClass" required placeholder="e.g. Class 10" /></div>
-      <div><label for="rqSubject">Subject needed</label><input id="rqSubject" required placeholder="e.g. Computer Science" /></div>
-      <div><label for="rqPhone">Your phone / WhatsApp</label><input id="rqPhone" required placeholder="03xx-xxxxxxx" /></div>
-      <div><label for="rqAddress">Student home address (where the tuition will happen)</label><textarea id="rqAddress" rows="2" required placeholder="House / street / block / area / city"></textarea><span class="small muted">Only the admin and the tutor matched to this request can see this address.</span></div>
-      <div><label for="rqTiming">Preferred timing</label><select id="rqTiming" required><option value="">Select preferred timing</option><option value="Morning">Morning</option><option value="Afternoon">Afternoon</option><option value="Evening">Evening</option></select></div>
-      <div><label for="rqMsg">Message for the tutor</label><textarea id="rqMsg" rows="3" placeholder="Days per week, any detail that helps…"></textarea></div>
+      <div><label for="rqClass">Student's class <span class="req">*</span></label><input id="rqClass" required placeholder="e.g. Class 10" /></div>
+      <div><label for="rqSubject">Subject needed <span class="req">*</span></label><input id="rqSubject" required placeholder="e.g. Computer Science" /></div>
+      <div><label for="rqPhone">Your phone / WhatsApp <span class="req">*</span></label><input id="rqPhone" required placeholder="03xx-xxxxxxx" /></div>
+      <div><label for="rqAddress">Student home address (where the tuition will happen) <span class="req">*</span></label><textarea id="rqAddress" rows="2" required placeholder="House / street / block / area / city"></textarea><span class="small muted">Only the admin and the tutor matched to this request can see this address.</span></div>
+      <div><label for="rqTiming">Preferred timing <span class="req">*</span></label><select id="rqTiming" required><option value="">Select preferred timing</option><option value="Morning">Morning</option><option value="Afternoon">Afternoon</option><option value="Evening">Evening</option></select></div>
+      <div><label for="rqMsg">Message for the tutor <span class="opt">(optional)</span></label><textarea id="rqMsg" rows="3" placeholder="Days per week, any detail that helps…"></textarea></div>
       <div class="rowline">
         <button class="btn btn-emerald" type="submit" id="reqSend">Send request</button>
         <button class="btn btn-ghost" type="button" id="reqCancel">Cancel</button>
