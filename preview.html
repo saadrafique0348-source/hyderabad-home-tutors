@@ -635,6 +635,37 @@
     .card-body{padding:1.2rem}
     .fee-band{padding:1rem 1.2rem 1.15rem}
   }
+  /* ---------- v3.1 fixes: hero stat chips (first chip was clipped) ---------- */
+  /* Root cause: the old rule `.hero-stats div:first-child{padding-left:0;border-left:none}`
+     outranks the v3 chip rule on padding-left/border-left, so the first glass chip
+     lost its left padding AND its left border. These later, equal-specificity rules
+     restore both, on desktop and on phones. */
+  .hero-stats div{min-width:0}
+  .hero-stats div:first-child{padding-left:1.1rem;border-left:1px solid rgba(255,255,255,.14)}
+  @media (max-width:640px){
+    .hero-stats div:first-child{padding-left:.9rem;border-left:1px solid rgba(255,255,255,.14)}
+  }
+  /* ---------- v3.1: tutor detail dialog ---------- */
+  #tutorGrid .card{cursor:pointer}
+  #tutorDialog{max-width:560px}
+  .td-top{display:flex;justify-content:flex-end;margin:-.4rem 0 .6rem}
+  .td-head{display:flex;gap:1rem;align-items:center}
+  #tdAvatar .avatar{width:76px;height:76px;font-size:1.75rem;flex:none}
+  .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block}
+  .td-head h3{margin:0;font-size:1.45rem}
+  #tdBadge{margin-top:.3rem}
+  #tdStars{margin-top:.35rem}
+  #tutorDialog .tags{margin:.9rem 0 .4rem}
+  #tutorDialog .meta-row{margin-top:.45rem}
+  #tdBio{margin:.8rem 0 0}
+  .td-fee-row{display:flex;justify-content:space-between;align-items:center;gap:1rem;background:var(--surface-2);border:1px solid var(--line);border-radius:16px;padding:1rem 1.2rem;margin-top:1.1rem}
+  .td-fee-row .fee{font-size:1.5rem;font-weight:800;font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:var(--emerald-900)}
+  .td-fee-row .fee small{font-size:.85rem;font-weight:600}
+  @media (prefers-color-scheme: dark){ .td-fee-row .fee{color:var(--emerald-100)} }
+  @media (max-width:640px){
+    .td-fee-row{flex-direction:column;align-items:stretch;text-align:center}
+    .td-fee-row .btn{width:100%}
+  }
 </style>
 </head>
 <body>
@@ -1142,6 +1173,20 @@
   </form>
 </dialog>
 
+<!-- Tutor detail modal (v3.1): tapping a tutor card opens this; the Request
+     button inside reuses the existing openRequest() flow incl. sign-in gate. -->
+<dialog id="tutorDialog">
+  <div class="td-top"><button class="btn btn-ghost btn-sm" type="button" id="tdClose">✕ Close</button></div>
+  <div class="td-head"><div id="tdAvatar"></div><div><h3 id="tdName"></h3><div id="tdBadge"></div><div id="tdStars"></div></div></div>
+  <div class="tags" id="tdSubjects"></div>
+  <div class="meta meta-row" id="tdClasses"></div>
+  <div class="meta meta-row" id="tdArea"></div>
+  <p class="small" id="tdBio"></p>
+  <div class="meta meta-row" id="tdQual"></div>
+  <div class="meta meta-row" id="tdExp"></div>
+  <div class="td-fee-row"><span class="fee" id="tdFee"></span><button class="btn btn-emerald" type="button" id="tdRequest">Request this tutor</button></div>
+</dialog>
+
 <footer class="site">
   <div class="wrap">
     <div class="cols">
@@ -1240,7 +1285,7 @@ var db=null, auth=null, storage=null, firebaseReady=false;
 var currentUser=null, currentProfile=null, currentIsAdmin=false;
 var tutorsData=[], reviewsData=[], settingsData={ adTop:{text:"",link:""}, adMid:{text:"",link:""}, feeEnabled:false, feePercent:10 };
 var userLoc=null, mapObj=null, mapMarkers=[];
-var reviewRating=0, requestTutorId=null;
+var reviewRating=0, requestTutorId=null, detailTutorId=null;
 var guestBrowse=false; /* in-memory only: a signed-out visitor who chose "Continue as guest" */
 
 function $(id){ return document.getElementById(id); }
@@ -1248,6 +1293,13 @@ function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){retu
 function showMsg(id, text, ok){ var el=$(id); if(!el) return; el.textContent=text; el.className="msg show "+(ok?"ok":"err"); }
 function hideMsg(id){ var el=$(id); if(el){ el.className="msg"; el.textContent=""; } }
 function initials(name){ return String(name||"?").trim().split(/\s+/).slice(0,2).map(function(w){return w[0];}).join("").toUpperCase(); }
+/* Photo avatar when a tutor has a photoUrl, initials otherwise. No tutor has a
+   photoUrl yet — Saad's profile.jpg is not published on saadrafique.me, so the
+   founder card keeps initials until a live photo URL exists. */
+function avatarHtml(t){
+  if (t && t.photoUrl) return '<div class="avatar"><img src="'+esc(t.photoUrl)+'" alt="'+esc(t.name||"Tutor")+' photo"></div>';
+  return '<div class="avatar">'+esc(initials(t?t.name:""))+'</div>';
+}
 function starsHtml(avg, count){
   var full = Math.round(avg||0), out="";
   for (var i=1;i<=5;i++) out += i<=full ? "★" : '<span class="off">★</span>';
@@ -1354,8 +1406,8 @@ function renderTutors(){
     var revs = reviewsData.filter(function(r){ return r.tutorId===t.id || r.tutorName===t.name; });
     var avg = revs.length ? revs.reduce(function(s,r){return s+(r.rating||0);},0)/revs.length : (t.ratingAvg||0);
     var cnt = revs.length || t.ratingCount || 0;
-    return '<article class="card">' +
-      '<div class="card-banner"><div class="avatar">'+esc(initials(t.name))+'</div>' +
+    return '<article class="card" data-tutor="'+esc(t.id)+'">' +
+      '<div class="card-banner">'+avatarHtml(t) +
       (t.founder ? '<span class="badge badge-verified">✓ Verified — Platform Founder</span>' : '<span class="badge badge-verified">✓ Verified Tutor</span>') +
       '</div>' +
       '<div class="card-body">' +
@@ -1374,6 +1426,13 @@ function renderTutors(){
   }).join("");
   grid.querySelectorAll("[data-request]").forEach(function(btn){
     btn.addEventListener("click", function(){ openRequest(btn.getAttribute("data-request")); });
+  });
+  /* Tapping anywhere else on a card opens the tutor detail modal. */
+  grid.querySelectorAll(".card[data-tutor]").forEach(function(card){
+    card.addEventListener("click", function(e){
+      if (e.target.closest("[data-request]")) return; /* request button keeps its own flow */
+      openTutorDetail(card.getAttribute("data-tutor"));
+    });
   });
   fillReviewTutorSelect();
 }
@@ -1518,6 +1577,33 @@ function openRequest(tutorId){
   }
   hideMsg("reqMsg");
   var dlg=$("reqDialog");
+  if (typeof dlg.showModal==="function") dlg.showModal(); else dlg.setAttribute("open","");
+}
+/* Tutor detail modal (v3.1): fills from the tutor data already loaded for the
+   card — no new Firestore reads. Its Request button reuses openRequest(), so
+   the sign-in gate and request flow are exactly the same as the card button. */
+function openTutorDetail(tutorId){
+  var t=null; tutorsData.forEach(function(x){ if (x.id===tutorId) t=x; });
+  if (!t) return;
+  detailTutorId=tutorId;
+  var revs = reviewsData.filter(function(r){ return r.tutorId===t.id || r.tutorName===t.name; });
+  var avg = revs.length ? revs.reduce(function(s,r){return s+(r.rating||0);},0)/revs.length : (t.ratingAvg||0);
+  var cnt = revs.length || t.ratingCount || 0;
+  $("tdAvatar").innerHTML = avatarHtml(t);
+  $("tdName").textContent = t.name || "";
+  $("tdBadge").innerHTML = t.founder ? '<span class="badge badge-verified">✓ Verified — Platform Founder</span>' : '<span class="badge badge-verified">✓ Verified Tutor</span>';
+  $("tdStars").innerHTML = starsHtml(avg, cnt);
+  $("tdSubjects").innerHTML = (t.subjects||[]).map(function(s){ return '<span class="tag">'+esc(s)+'</span>'; }).join("");
+  $("tdClasses").textContent = "Classes: " + (t.classes||[]).join(", ");
+  $("tdArea").innerHTML = esc(t.area||"Hyderabad") + (t._dist!=null ? ' &nbsp;<span class="badge badge-dist">'+t._dist.toFixed(1)+' km away</span>' : '');
+  $("tdBio").textContent = t.bio || "";
+  $("tdBio").style.display = t.bio ? "" : "none";
+  $("tdQual").textContent = t.qualification || "";
+  $("tdQual").style.display = t.qualification ? "" : "none";
+  $("tdExp").textContent = t.experience || "";
+  $("tdExp").style.display = t.experience ? "" : "none";
+  $("tdFee").innerHTML = fmtRs(t.fee) + ' <small>/ month</small>';
+  var dlg=$("tutorDialog");
   if (typeof dlg.showModal==="function") dlg.showModal(); else dlg.setAttribute("open","");
 }
 </script>
@@ -2346,6 +2432,10 @@ function wireTeachForm(){
 /* ================= Request submit ================= */
 function wireRequestDialog(){
   $("reqCancel").addEventListener("click", function(){ $("reqDialog").close(); });
+  /* Tutor detail dialog wiring (v3.1). */
+  $("tdClose").addEventListener("click", function(){ $("tutorDialog").close(); });
+  $("tdRequest").addEventListener("click", function(){ var id=detailTutorId; $("tutorDialog").close(); if (id) openRequest(id); });
+  $("tutorDialog").addEventListener("click", function(e){ if (e.target===$("tutorDialog")) $("tutorDialog").close(); });
   $("reqForm").addEventListener("submit", function(ev){
     ev.preventDefault(); hideMsg("reqMsg");
     if (!firebaseReady || !db) return showMsg("reqMsg","Sending is not available right now — the connection to Firebase could not be loaded.", false);
