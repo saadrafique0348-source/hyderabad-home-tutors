@@ -23,7 +23,7 @@
 <title>Hyderabad Home Tutors — Verified Home Tutors in Hyderabad</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Libre+Franklin:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
   :root{
@@ -492,6 +492,148 @@
   @media (prefers-color-scheme: dark){
     .guest-row a{border-color:var(--emerald-600);color:#a7e8cd;background:transparent}
     .guest-row a:hover{background:var(--emerald-700);color:#fff}
+  }
+  /* ---------- v3 modern redesign (preview only) ----------
+     Visual-only refresh, appended LAST so it overrides the v2 system:
+     Plus Jakarta Sans throughout, glass sticky header, floating search
+     card overlapping the hero, airy sections, pill eyebrows, softer
+     shadows, 20-24px radii, flat emerald surfaces (no heavy gradients).
+     No JS, ids, classes, Firebase config or rules text changed. */
+  :root{
+    --bg:#f5f7f5; --surface:#ffffff; --surface-2:#eef1ec; --ink:#0f1e18; --ink-soft:#52625a;
+    --line:#dde3dc; --radius:20px;
+    --shadow-sm:0 1px 3px rgba(3,33,27,.05),0 8px 20px rgba(3,33,27,.05);
+    --shadow-md:0 2px 6px rgba(3,33,27,.05),0 16px 34px rgba(3,33,27,.08);
+    --shadow-lg:0 6px 18px rgba(3,33,27,.08),0 28px 56px rgba(3,33,27,.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0a120e; --surface:#131f19; --surface-2:#1a2921; --ink:#eef3ef; --ink-soft:#b3c2b8; --line:#2a3b31; }
+    .sec-eyebrow{background:var(--emerald-100);color:#a7e8cd}
+    #view-admin [data-apane="overview"] .card h3{color:var(--emerald-100)}
+  }
+  /* ---------- typography: Plus Jakarta Sans everywhere ---------- */
+  body{font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.65}
+  h1,h2,h3,.serif{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-weight:800;letter-spacing:-.02em;line-height:1.12}
+  .brand b,.footer-brand b{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-weight:800;letter-spacing:-.01em}
+  .hero-stats div b,.avatar,.ad-slot .ad-body{font-family:"Plus Jakarta Sans",system-ui,sans-serif}
+  .fee-band .fee{font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-weight:800}
+  .fee-band .fee small{font-family:"Plus Jakarta Sans",system-ui,sans-serif}
+  /* ---------- buttons & inputs ---------- */
+  .btn{border-radius:999px;transition:transform .18s ease,box-shadow .18s ease,background .18s ease,border-color .18s ease}
+  .btn:active{transform:scale(.98)}
+  .btn-emerald,.btn-gold{box-shadow:0 8px 20px rgba(10,106,76,.25)}
+  .btn-emerald:hover,.btn-gold:hover{transform:translateY(-1px)}
+  .btn-accent{box-shadow:0 8px 20px rgba(184,134,11,.28)}
+  .btn-accent:hover{transform:translateY(-1px)}
+  input,select,textarea{border-radius:14px;border:1.5px solid var(--line);transition:border-color .18s ease,box-shadow .18s ease}
+  input:focus,select:focus,textarea:focus{border-color:var(--emerald-600);box-shadow:0 0 0 4px rgba(13,133,96,.15);outline:none}
+  /* ---------- glass header (sticky on desktop; compact + in-flow on phones) ---------- */
+  @media (min-width:641px){
+    header.site{position:sticky;background:rgba(3,33,27,.85);-webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2)}
+  }
+  @media (max-width:640px){
+    header.site{background:rgba(3,33,27,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+  }
+  .brand-logo{border-radius:16px;box-shadow:0 0 0 1px rgba(255,255,255,.18),0 6px 16px rgba(0,0,0,.35)}
+  nav.main a{border-radius:999px}
+  /* ---------- hero: clean band, glass stat chips ---------- */
+  .hero{padding:4.4rem 0 0;position:relative}
+  .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 90% at 50% 0%,rgba(255,255,255,.05),transparent 70%);pointer-events:none}
+  .hero .wrap{position:relative}
+  .hero-pill{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.28);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .hero h1{letter-spacing:-.03em;font-weight:800}
+  .hero h1 em{color:#8fd8b8}
+  .hero p.lede{font-size:1.16rem}
+  .hero-stats{background:none;border:none;padding:0;gap:.8rem}
+  .hero-stats div{flex:1 1 0;padding:.95rem 1.1rem;border:none;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:16px}
+  .hero-stats div b{font-size:1.55rem;font-weight:800}
+  .hero-stats div span{text-transform:uppercase;letter-spacing:.07em;font-size:.76rem}
+  /* ---------- floating search card (overlaps hero bottom) ---------- */
+  .search-card{border-radius:24px;border:1px solid rgba(3,33,27,.06);box-shadow:var(--shadow-lg);margin-top:2.2rem;margin-bottom:-2.6rem;position:relative;z-index:5}
+  #view-home > .wrap{padding-top:4rem}
+  /* ---------- sections & eyebrows ---------- */
+  section.block{padding:4rem 0 1rem}
+  .sec-head{margin-bottom:1.6rem}
+  .sec-head h2{font-size:2.15rem;letter-spacing:-.02em}
+  .sec-head h2::after{width:2.6rem;height:4px;border-radius:999px}
+  .sec-eyebrow{background:var(--emerald-50);color:var(--emerald-800);border-radius:999px;padding:.32rem .85rem;font-size:.74rem}
+  .sec-eyebrow::before{display:none}
+  /* ---------- tutor cards ---------- */
+  .card{border-radius:22px;border:1px solid rgba(3,33,27,.05);box-shadow:var(--shadow-sm);transition:box-shadow .25s ease,transform .25s ease}
+  .card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+  #tutorGrid .card{border-radius:24px;border:1px solid rgba(3,33,27,.06);box-shadow:var(--shadow-sm)}
+  #tutorGrid .card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+  .card-banner{background:var(--emerald-900);padding:1.25rem 1.5rem}
+  .card-banner .avatar{box-shadow:0 0 0 3px rgba(255,255,255,.35),0 8px 18px rgba(0,0,0,.3)}
+  .card-body{padding:1.5rem}
+  #tutorGrid .card h3{font-size:1.35rem;font-weight:800;letter-spacing:-.01em}
+  .tag{border:none;background:var(--emerald-50);padding:.32rem .8rem;font-size:.82rem}
+  .fee-band{background:var(--surface-2);border-top:1px solid var(--line);padding:1.1rem 1.5rem 1.3rem}
+  .fee-band .fee{font-size:1.5rem}
+  /* ---------- trust, steps, FAQ, reviews ---------- */
+  .trust-item,.step,.review{border-radius:20px;border:1px solid rgba(3,33,27,.05);box-shadow:var(--shadow-sm);transition:box-shadow .2s ease,transform .2s ease}
+  .trust-item:hover,.step:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+  .step .num{width:42px;height:42px;font-weight:800;box-shadow:0 0 0 4px var(--emerald-100)}
+  .faq details{border-radius:18px;border:1px solid rgba(3,33,27,.05);box-shadow:var(--shadow-sm)}
+  .faq summary{display:flex;align-items:center;gap:.6rem}
+  .faq summary::after{content:"+";margin-left:auto;font-size:1.4rem;font-weight:700;color:var(--emerald-700);line-height:1}
+  .faq details[open] summary::after{content:"−"}
+  /* ---------- panels, tabs, messages, dialogs ---------- */
+  .panel:not(#authPanel){border-radius:24px;border:1px solid rgba(3,33,27,.06);box-shadow:var(--shadow-md)}
+  .tabs button{border-radius:999px;transition:background .18s ease,color .18s ease,box-shadow .18s ease}
+  .tabs button.on{box-shadow:0 6px 16px rgba(10,106,76,.3)}
+  .msg{border-radius:14px}
+  dialog{border-radius:26px;border:1px solid var(--line)}
+  .verify-banner{border-radius:20px;border:1px solid var(--emerald-100)}
+  .private-note{border-radius:16px}
+  .ad-slot{border-radius:20px;border:1px solid rgba(3,33,27,.05)}
+  /* ---------- chips & map ---------- */
+  .chip{border-radius:999px;box-shadow:var(--shadow-sm)}
+  .chip:hover{transform:translateY(-1px)}
+  .map-frame{border-radius:24px;border:1px solid rgba(3,33,27,.05);box-shadow:var(--shadow-md)}
+  #map{border-radius:18px}
+  /* ---------- admin ---------- */
+  #view-admin [data-apane="overview"] .card{border-radius:22px;border:1px solid rgba(3,33,27,.05);box-shadow:var(--shadow-sm)}
+  #view-admin [data-apane="overview"] .card h3{font-size:2.5rem;font-weight:800;letter-spacing:-.02em;color:var(--emerald-900)}
+  table.tbl th,table.tbl td{padding:.85rem .9rem}
+  #view-admin #btnMigrate{box-shadow:0 10px 22px rgba(10,106,76,.3);min-height:2.85rem;padding:.72rem 1.4rem}
+  /* ---------- sign-in screen ---------- */
+  body.gated #authPanel{border-radius:26px;border:1px solid rgba(3,33,27,.06);box-shadow:var(--shadow-lg);padding:2rem}
+  .auth-logo{border-radius:22px;box-shadow:0 0 0 1px rgba(3,33,27,.06),0 14px 30px rgba(3,33,27,.18)}
+  .auth-name{font-weight:800;letter-spacing:-.02em}
+  .auth-tag{font-size:1rem}
+  #authPanel .tabs button{min-height:2.75rem;font-size:.98rem}
+  #authPanel .btn{min-height:3rem}
+  .btn-google{border-radius:999px;border-width:1.5px;font-weight:700}
+  .guest-row a{box-shadow:0 10px 24px rgba(3,33,27,.12);transition:background .18s ease,color .18s ease,transform .18s ease}
+  .guest-row a:hover{transform:translateY(-1px)}
+  /* ---------- footer ---------- */
+  footer.site{border-top:3px solid var(--emerald-700)}
+  footer.site h3::after{width:2rem;height:3px;border-radius:999px;background:var(--emerald-600)}
+  /* ---------- motion ---------- */
+  @media (prefers-reduced-motion: reduce){
+    .btn,.chip,.card,.trust-item,.step{transition:none}
+    #tutorGrid .card:hover,.card:hover,.trust-item:hover,.step:hover,.chip:hover{transform:none}
+  }
+  /* ---------- phones (mobile-first user) ---------- */
+  @media (max-width:640px){
+    .hero{padding:2.8rem 0 0}
+    .hero h1{font-size:2.1rem}
+    .hero p.lede{font-size:1.06rem}
+    .hero-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:.65rem;padding:0}
+    .hero-stats div{padding:.8rem .9rem}
+    .hero-stats div b{font-size:1.3rem}
+    .search-card{margin-top:1.8rem;margin-bottom:-1.8rem;padding:1.4rem;border-radius:20px}
+    #view-home > .wrap{padding-top:3.2rem}
+    .search-actions #btnSearch,.search-actions #btnLocate{width:100%;justify-content:center}
+    .sec-head h2{font-size:1.8rem}
+    section.block{padding:3.2rem 0 .8rem}
+    .panel:not(#authPanel){padding:1.5rem}
+    body.gated #authPanel{padding:1.5rem}
+    #tutorGrid .card h3{font-size:1.3rem}
+    .card-banner{padding:1.05rem 1.2rem}
+    .card-body{padding:1.2rem}
+    .fee-band{padding:1rem 1.2rem 1.15rem}
   }
 </style>
 </head>
