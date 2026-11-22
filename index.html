@@ -697,7 +697,7 @@
       <h1>Verified home tutors in Hyderabad, <em>matched to your area.</em></h1>
       <p class="lede">Every tutor on this platform passes identity, qualification and interview checks before their listing goes live, with trial lessons and parent reviews checked after that. Search by subject, class and neighbourhood — the tutors nearest to your home come first. Free to join and browse for parents and tutors.</p>
       <div class="hero-stats">
-        <div><b id="statTutors">1</b><span>Verified tutors live</span></div>
+        <div><b id="statTutors">0</b><span>Verified tutors live</span></div>
         <div><b>5-step</b><span>Verification process</span></div>
         <div><b>Rs 0</b><span>Fee to join &amp; browse</span></div>
         <div><b>14</b><span>Areas covered</span></div>
@@ -856,6 +856,14 @@
       <h3 style="margin-bottom:.6rem">Tutor application &amp; professional profile</h3>
       <div class="msg" id="teachMsg"></div>
       <div id="teachGate" class="muted">Checking your account…</div>
+      <div id="teachVerify" class="verify-banner hidden">
+        <p><b>Verify your email to submit your application.</b> We sent a verification link to <b id="teachVerifyAddr"></b>. Open that email and tap the link, then tap “I verified — check again” below.</p>
+        <div class="rowline" style="margin-top:.6rem">
+          <button class="btn btn-gold btn-sm" type="button" id="btnTeachSend">Resend verification link</button>
+          <button class="btn btn-ghost btn-sm" type="button" id="btnTeachRefresh">I verified — check again</button>
+        </div>
+        <p class="small muted" id="teachVerifyStatus" style="margin:.5rem 0 0" aria-live="polite"></p>
+      </div>
       <form id="teachForm" class="hidden">
         <div class="form-grid">
           <div><label for="tName">Full name <span class="req">*</span></label><input id="tName" required /></div>
@@ -989,6 +997,12 @@
           <h3 style="margin-bottom:.4rem">My tutor application</h3>
           <p id="tutorDashBody" class="muted" style="margin:0"></p>
           <div style="margin-top:.7rem"><a class="btn btn-emerald btn-sm" href="#/teach">Open my application</a></div>
+        </div>
+        <div class="panel" style="margin-top:1rem">
+          <h3 style="margin-bottom:.4rem">Your tuition requests</h3>
+          <p class="small muted" style="margin:0 0 .6rem">Requests from parents appear here. Parent contact details are shared only after a request is Matched.</p>
+          <div class="stack" id="tutorInbox"></div>
+          <p class="muted" id="noTutorInbox" style="display:none">No tuition requests yet.</p>
         </div>
       </div>
     </div>
@@ -1295,6 +1309,10 @@ var guestBrowse=false; /* in-memory only: a signed-out visitor who chose "Contin
 
 function $(id){ return document.getElementById(id); }
 function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+/* A value from the database must never be pasted raw into a class
+   attribute: only lowercase letters, digits and hyphens get through,
+   so a crafted status can never break out of the attribute. */
+function statusSlug(s){ return String(s||"").toLowerCase().replace(/[^a-z0-9-]+/g,"") || "new"; }
 function showMsg(id, text, ok){ var el=$(id); if(!el) return; el.textContent=text; el.className="msg show "+(ok?"ok":"err"); }
 function hideMsg(id){ var el=$(id); if(el){ el.className="msg"; el.textContent=""; } }
 function initials(name){ return String(name||"?").trim().split(/\s+/).slice(0,2).map(function(w){return w[0];}).join("").toUpperCase(); }
@@ -1402,10 +1420,17 @@ function filteredTutors(){
 }
 function renderTutors(){
   var list=filteredTutors(), grid=$("tutorGrid");
-  /* The hero count is the number of tutors actually listed below, so the
-     count and the grid can never disagree. */
-  $("statTutors").textContent = list.length;
-  $("resultsSub").textContent = list.length + (list.length===1?" tutor":" tutors") + (sortPoint() ? " · nearest first" : "");
+  /* Hero stat counts verified NON-founder tutors only, across the whole
+     platform (not the current filter), so it stays stable while searching.
+     The founder card is separate — labelled "Platform Founder" — and is
+     not counted here. The results line below names the founder
+     explicitly, so the stat and the grid can never look contradictory. */
+  var realCount = tutorsData.filter(function(t){ return !t.founder; }).length;
+  $("statTutors").textContent = realCount ? realCount : "Open";
+  var stLbl = $("statTutors").nextElementSibling;
+  if (stLbl) stLbl.textContent = realCount ? "Verified tutors live" : "Tutor applications open";
+  var hasFounder = list.some(function(t){ return !!t.founder; });
+  $("resultsSub").textContent = list.length + (list.length===1?" tutor":" tutors") + (hasFounder ? " · includes Platform Founder" : "") + (sortPoint() ? " · nearest first" : "");
   $("noResults").style.display = list.length ? "none" : "block";
   grid.innerHTML = list.map(function(t){
     var revs = reviewsData.filter(function(r){ return r.tutorId===t.id || r.tutorName===t.name; });
@@ -1463,18 +1488,47 @@ function drawMap(){
     el.outerHTML = '<div class="map-fallback" id="map">Map could not load. Areas: '+AREAS.map(function(a){return a.name;}).join(", ")+'.</div>';
     return;
   }
+  /* Do not create the Leaflet map while its container is hidden: the
+     sign-in gate hides the home view at first load, and a map created
+     at zero size renders grey, unloaded tiles. Creation is retried when
+     the home view becomes visible (applyRoute calls drawMap then). */
+  if (!el.clientWidth) return;
   if (!mapObj){
     /* Wider default view of Hyderabad so no pin starts life at the edge. */
     mapObj = L.map("map").setView([25.39, 68.37], 10);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:18, attribution:"© OpenStreetMap contributors" }).addTo(mapObj);
+    if (!mapObj._hhtResizeWired){
+      mapObj._hhtResizeWired = true;
+      window.addEventListener("resize", function(){ if (mapObj) mapObj.invalidateSize(); });
+    }
   }
   mapMarkers.forEach(function(m){ mapObj.removeLayer(m); }); mapMarkers=[];
   var pt=sortPoint();
   var pinPoints=[];
+  /* Tutors in the same base area share one set of coordinates, so their
+     pins would sit exactly on top of each other and only one would be
+     visible (the founder and the Qasimabad tutors all sit on the same
+     point). Nudge coincident pins apart a little — same area, still
+     accurate — so every tutor gets a visible pin. */
+  var usedPts=[];
+  function pinLatLng(lat, lng){
+    var la=lat, ln=lng, n=0, i;
+    for (i=0;i<usedPts.length;i++){
+      if (Math.abs(usedPts[i][0]-la)<0.0004 && Math.abs(usedPts[i][1]-ln)<0.0004) n++;
+    }
+    if (n){
+      var ang=(n*2.4)%(Math.PI*2);
+      la=lat+Math.sin(ang)*0.0016;
+      ln=lng+Math.cos(ang)*0.0016;
+    }
+    usedPts.push([la,ln]);
+    return [la,ln];
+  }
   tutorsData.forEach(function(t){
     if (t.lat==null) return;
-    pinPoints.push([t.lat,t.lng]);
-    var m=L.marker([t.lat,t.lng]).addTo(mapObj)
+    var ll=pinLatLng(t.lat, t.lng);
+    pinPoints.push(ll);
+    var m=L.marker(ll).addTo(mapObj)
       .bindPopup("<b>"+esc(t.name)+"</b><br>"+esc((t.subjects||[]).join(", "))+"<br>"+esc(t.area||"")+(pt&&t._dist!=null?"<br>"+t._dist.toFixed(1)+" km away":""));
     mapMarkers.push(m);
   });
@@ -1493,10 +1547,15 @@ function drawMap(){
       mapObj.fitBounds(L.latLngBounds(pinPoints), { padding:[42,42], maxZoom:12 });
     } else if (pinPoints.length===1){
       mapObj.setView(pinPoints[0], 12);
+    } else {
+      /* No pins yet (data still loading): keep a sensible Hyderabad view
+         instead of drifting to a world view. */
+      mapObj.setView([25.39, 68.37], 10);
     }
   }
   framePins();
   setTimeout(framePins, 250);
+  setTimeout(framePins, 700);
 }
 
 /* ================= Reviews ================= */
@@ -1541,8 +1600,12 @@ function renderReviews(){
   var grid=$("reviewGrid");
   $("noReviews").style.display = reviewsData.length ? "none" : "block";
   grid.innerHTML = reviewsData.map(function(r){
+    /* Never show an email address as the review author — older review
+       records may carry the parent's email; show "Parent" instead. */
+    var an = r.authorName || "Parent";
+    if (String(an).indexOf("@") >= 0) an = "Parent";
     return '<article class="review"><div>'+starsHtml(r.rating,0).replace('<span class="meta">New tutor</span>','')+'</div>' +
-      '<p>'+esc(r.text)+'</p><p class="meta" style="margin-top:.5rem">— '+esc(r.authorName||"Parent")+' · for '+esc(r.tutorName||"tutor")+'</p></article>';
+      '<p>'+esc(r.text)+'</p><p class="meta" style="margin-top:.5rem">— '+esc(an)+' · for '+esc(r.tutorName||"tutor")+'</p></article>';
   }).join("");
 }
 function buildStarInput(){
@@ -2212,7 +2275,13 @@ function refreshAccount(){
   else loadMyRequests();
 }
 function loadMyRequests(){
-  var box=$("myRequests"); box.innerHTML='<p class="muted">Loading your requests…</p>';
+  var box=$("myRequests");
+  /* Hide the empty-state line while (re)loading, so "Loading your
+     requests…" and "You have not sent any requests yet." never show
+     at the same time (a second refresh used to leave the old empty
+     line visible under the new Loading line). */
+  $("noRequests").style.display="none";
+  box.innerHTML='<p class="muted">Loading your requests…</p>';
   if (!db) { box.innerHTML=""; return; }
   db.collection("tutor_requests").where("parentUid","==",currentUser.uid).get()
     .then(function(snap){
@@ -2228,16 +2297,67 @@ function loadMyRequests(){
         var st = String(r.status||"New"), addr = (r._p&&r._p.studentAddress) || r.studentAddress || r.homeAddress || "";
         return '<div class="panel" style="padding:.9rem 1.1rem"><div class="rowline" style="justify-content:space-between">' +
           '<div><b>'+esc(r.tutorName||"Tutor")+'</b> <span class="meta">· '+esc(r.subject||"")+' · '+esc(r.studentClass||"")+'</span></div>' +
-          '<span class="badge badge-status st-'+st.toLowerCase()+'">'+esc(st)+'</span></div>' +
+          '<span class="badge badge-status st-'+esc(statusSlug(st))+'">'+esc(st)+'</span></div>' +
           ((addr||r.preferredTiming) ? '<p class="small muted" style="margin:.35rem 0 0">'+esc(addr)+(r.preferredTiming ? ' · Preferred: '+esc(r.preferredTiming) : '')+'</p>' : '') +
           (r.message ? '<p class="small muted" style="margin:.35rem 0 0">'+esc(r.message)+'</p>' : '') +
           ((st==="Matched"||st==="Closed") ? '<p class="small muted" style="margin:.35rem 0 0">You can now review this tutor from the home page.</p>' : '') + '</div>';
       }).join("");
     })
-    .catch(function(e){ box.innerHTML='<p class="muted">'+esc(friendlyErr(e))+'</p>'; });
+    .catch(function(e){ $("noRequests").style.display="none"; box.innerHTML='<p class="muted">'+esc(friendlyErr(e))+'</p>'; });
+}
+/* ================= Tutor inbox ================= */
+/* A tutor sees the tuition requests sent to them. Parent contact details
+   (name, phone, address) are shown ONLY for Matched requests — the
+   Firestore rules let a tutor read request_private only after an admin
+   sets the request to Matched, so earlier requests never leak parent
+   details. The founder's requests (tutorId "founder-saad") are also
+   shown to the admin, who is the founder. */
+function loadTutorInbox(){
+  var box=$("tutorInbox"); if (!box || !db || !currentUser) return;
+  $("noTutorInbox").style.display="none";
+  box.innerHTML='<p class="muted">Loading requests…</p>';
+  var q1 = db.collection("tutor_requests").where("tutorId","==",currentUser.uid).get();
+  var q2 = currentIsAdmin
+    ? db.collection("tutor_requests").where("tutorId","==","founder-saad").get()
+    : Promise.resolve(null);
+  Promise.all([q1,q2]).then(function(res){
+    var rows=[], seen={};
+    res.forEach(function(snap){
+      if (!snap) return;
+      snap.forEach(function(d){
+        if (seen[d.id]) return; seen[d.id]=true;
+        rows.push(Object.assign({id:d.id}, d.data()));
+      });
+    });
+    rows.sort(function(a,b){ return ((b.createdAt&&b.createdAt.seconds)||0)-((a.createdAt&&a.createdAt.seconds)||0); });
+    $("noTutorInbox").style.display = rows.length ? "none" : "block";
+    return Promise.all(rows.map(function(r){
+      if (r.status!=="Matched") return Promise.resolve();
+      return db.collection("request_private").doc(r.id).get().then(function(p){ r._p=p.exists?p.data():null; }).catch(function(){ r._p=null; });
+    })).then(function(){ return rows; });
+  })
+  .then(function(rows){
+    box.innerHTML = rows.map(function(r){
+      var st=String(r.status||"New"), contact="";
+      if (st==="Matched" && r._p){
+        var ph=normalizePkPhone(r._p.parentPhone||""), digits=ph?ph.replace(/\D/g,""):"";
+        contact='<p class="small" style="margin:.4rem 0 0"><b>Parent:</b> '+esc(r._p.parentName||"")+(ph?' · <a href="tel:'+esc(ph)+'">'+esc(r._p.parentPhone)+'</a> · <a href="https://wa.me/'+esc(digits)+'" target="_blank" rel="noopener">WhatsApp</a>':'')+'<br><b>Address:</b> '+esc(r._p.studentAddress||"")+'</p>';
+      } else if (st==="Closed"){
+        contact='<p class="small muted" style="margin:.4rem 0 0">This request is closed.</p>';
+      } else {
+        contact='<p class="small muted" style="margin:.4rem 0 0">Parent contact details and address are shared here once the admin confirms the match.</p>';
+      }
+      return '<div class="panel" style="padding:.9rem 1.1rem"><div class="rowline" style="justify-content:space-between">' +
+        '<div><b>'+esc(r.subject||"")+'</b> <span class="meta">· '+esc(r.studentClass||"")+' · '+esc(r.preferredTiming||"")+'</span></div>' +
+        '<span class="badge badge-status st-'+esc(statusSlug(st))+'">'+esc(st)+'</span></div>' +
+        (r.message ? '<p class="small muted" style="margin:.35rem 0 0">'+esc(r.message)+'</p>' : '') + contact + '</div>';
+    }).join("");
+  })
+  .catch(function(e){ $("noTutorInbox").style.display="none"; box.innerHTML='<p class="muted">'+esc(friendlyErr(e))+'</p>'; });
 }
 function loadTutorDash(){
   if (!db) return;
+  loadTutorInbox();
   db.collection("tutors").doc(currentUser.uid).get()
     .then(function(doc){
       var el=$("tutorDashBody");
@@ -2250,9 +2370,20 @@ function loadTutorDash(){
 function statusLabel(s){ return s==="approved" ? "Verified & live" : s==="rejected" ? "Not approved" : "Under verification (pending)"; }
 
 /* ================= Teach form ================= */
+/* Shows the email-verification prompt on the tutor application page
+   itself (not only after a failed submit): an unverified tutor sees
+   the notice with resend / check-again buttons instead of a silent
+   submit failure. */
+function updateTeachVerifyBox(){
+  var box=$("teachVerify"); if (!box) return;
+  var needs = !!currentUser && emailNeedsVerification();
+  box.classList.toggle("hidden", !needs);
+  if (needs) $("teachVerifyAddr").textContent = currentUser.email;
+}
 function refreshTeachGate(){
   var gate=$("teachGate"), form=$("teachForm");
   if (!gate) return;
+  updateTeachVerifyBox();
   if (!currentUser){
     gate.classList.remove("hidden"); form.classList.add("hidden");
     gate.innerHTML = 'Please <a href="#/account">sign in</a> with a <b>tutor account</b> first — create one free from the account page (choose “Tutor” when registering).';
@@ -2283,6 +2414,20 @@ function refreshTeachGate(){
   }).catch(function(){});
 }
 function wireTeachForm(){
+  var tvSend=$("btnTeachSend"); if (tvSend) tvSend.addEventListener("click", function(){
+    if (!currentUser) return;
+    currentUser.sendEmailVerification()
+      .then(function(){ $("teachVerifyStatus").textContent="Verification link sent to "+currentUser.email+". Open that email and tap the link, then use the “check again” button."; })
+      .catch(function(e){ $("teachVerifyStatus").textContent=friendlyErr(e); });
+  });
+  var tvCheck=$("btnTeachRefresh"); if (tvCheck) tvCheck.addEventListener("click", function(){
+    if (!currentUser) return;
+    currentUser.reload().then(function(){
+      updateTeachVerifyBox(); refreshTeachGate();
+      if (currentUser.emailVerified) showMsg("teachMsg","Email verified — thank you! You can now submit your application.", true);
+      else $("teachVerifyStatus").textContent="Not verified yet. Open the verification link in the email we sent to "+currentUser.email+" and tap it, then check again.";
+    }).catch(function(e){ showMsg("teachMsg", friendlyErr(e), false); });
+  });
   fillSelect($("tArea"), AREAS.map(function(a){return a.name;}), "Select your base area");
   $("tArea").querySelector("option").textContent="Select your base area";
   var cnicInput=$("tCnic"); if (cnicInput) cnicInput.addEventListener("input", function(){ cnicInput.value=formatCnic(cnicInput.value); });
@@ -2491,8 +2636,12 @@ function wireReviewForm(){
     if (!sel.value || !opt) return showMsg("reviewMsg","Only tutors you were matched with can be reviewed.", false);
     var rtext=$("rvText").value.trim();
     if (rtext.length<10) return showMsg("reviewMsg","Please write at least 10 characters.", false);
+    /* The public author is the account's display name — never an email
+       address. If the profile has no usable name, fall back to "Parent". */
+    var authorName = (currentProfile && currentProfile.name) || "Parent";
+    if (String(authorName).indexOf("@") >= 0) authorName = "Parent";
     db.collection("reviews").doc(sel.value).set({
-      authorUid: currentUser.uid, authorName: ((currentProfile && currentProfile.name) || "Parent").slice(0,120),
+      authorUid: currentUser.uid, authorName: authorName.slice(0,120),
       tutorId: opt.getAttribute("data-tutor-id"), tutorName: (opt.getAttribute("data-name")||"").slice(0,80), requestId: sel.value,
       rating: reviewRating, text: rtext.slice(0,1000), approved:false,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
