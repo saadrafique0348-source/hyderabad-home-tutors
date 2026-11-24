@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "tech.hyderabadhometutors.twa",
+    "sha256_cert_fingerprints": ["48:E2:88:2C:E6:3E:20:4D:D1:04:DE:08:9D:01:A0:E3:BE:E8:27:2E:E2:6D:73:1F:35:BB:84:04:5B:4F:D2:13"]
+  }
+}]
