@@ -15,6 +15,12 @@
 <meta name="color-scheme" content="light dark" />
 <meta name="description" content="Hyderabad Home Tutors — find verified home tutors in Hyderabad, Sindh by subject, class and area. Free to join and browse for parents and tutors." />
 <meta name="theme-color" content="#03211b" />
+<link rel="manifest" href="/manifest.json" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="HHT Tutors" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Hyderabad Home Tutors" />
 <meta property="og:title" content="Hyderabad Home Tutors — Verified Home Tutors in Hyderabad" />
@@ -3100,6 +3106,14 @@ document.addEventListener("DOMContentLoaded", function(){
     });
   });
 })();
+</script>
+<script>
+/* PWA: register the service worker so the site installs like an app. */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("/sw.js").catch(function () {});
+  });
+}
 </script>
 </body>
 </html>
