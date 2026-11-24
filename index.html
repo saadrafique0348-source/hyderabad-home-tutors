@@ -2173,7 +2173,7 @@ function sendPhoneCode(mode){
   if (!phone) return showMsg("acctMsg","Enter a valid mobile number, e.g. 0300-1234567.", false);
   var btn=$(f.send); btn.disabled=true; btn.textContent="Sending code…";
   try {
-    if (!f.verifier) f.verifier = new firebase.auth.RecaptchaVerifier(f.captcha, { size:"normal" });
+    if (!f.verifier) f.verifier = new firebase.auth.RecaptchaVerifier(f.captcha, { size:"invisible" });
   } catch(e){ btn.disabled=false; btn.textContent=f.sendLabel; return showMsg("acctMsg", phoneErr(e), false); }
   auth.signInWithPhoneNumber(phone, f.verifier)
     .then(function(confirmation){
