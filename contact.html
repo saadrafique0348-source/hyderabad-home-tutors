@@ -34,5 +34,41 @@ ul{padding-left:1.2rem}li{margin:.25rem 0}footer{max-width:46rem;margin:0 auto;p
 </ul>
 <p class="note">Please do not share CNIC photos or full home addresses by email or WhatsApp. Tutors provide CNIC details only through the secure application form on this website, and they are kept admin-only.</p>
 </main>
-<footer><a href="/about.html">About Us</a> · <a href="/contact.html">Contact Us</a> · <a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms</a> · <a href="/disclaimer.html">Disclaimer</a> · <a href="/cookie-policy.html">Cookie Policy</a> · <a href="/blog.html">Blog</a> · © 2026 Hyderabad Home Tutors, Hyderabad, Sindh, Pakistan</footer>
+<footer><a href="/about.html">About Us</a> · <a href="/contact.html">Contact Us</a> · <a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms</a> · <a href="/disclaimer.html">Disclaimer</a> · <a href="/cookie-policy.html">Cookie Policy</a> · <a href="#" onclick="localStorage.removeItem('hht_cookie_consent');location.reload();return false;">Cookie Settings</a> · <a href="/blog.html">Blog</a> · © 2026 Hyderabad Home Tutors, Hyderabad, Sindh, Pakistan</footer>
+<!-- Cookie consent banner (free, built into the site - no third-party plugin). -->
+<style>
+#hht-cookie-banner{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#03211b;color:#fff;padding:.9rem 1.1rem;display:none;box-shadow:0 -2px 12px rgba(0,0,0,.25)}
+#hht-cookie-banner.show{display:block}
+#hht-cookie-banner .hht-cb-inner{max-width:60rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem .9rem;align-items:center;justify-content:space-between}
+#hht-cookie-banner p{margin:0;font-size:.9rem;line-height:1.5;flex:1 1 22rem}
+#hht-cookie-banner a{color:#f3d97a}
+#hht-cookie-banner .hht-cb-btns{display:flex;gap:.5rem;flex:none}
+#hht-cookie-banner button{cursor:pointer;border-radius:.5rem;padding:.5rem 1.1rem;font-size:.92rem;font-weight:700;border:1px solid #fff;background:transparent;color:#fff}
+#hht-cookie-banner button.hht-cb-accept{background:#c9a227;border-color:#c9a227;color:#03211b}
+</style>
+<div id="hht-cookie-banner" role="dialog" aria-label="Cookie consent">
+  <div class="hht-cb-inner">
+    <p>We use cookies to keep you signed in, count visits and show ads when displayed. Read our <a href="/cookie-policy.html">Cookie Policy</a>.</p>
+    <div class="hht-cb-btns">
+      <button type="button" class="hht-cb-accept" onclick="hhtCookieChoice('accepted')">Accept</button>
+      <button type="button" onclick="hhtCookieChoice('declined')">Decline</button>
+    </div>
+  </div>
+</div>
+<script>
+function hhtCookieChoice(choice){
+  try { localStorage.setItem('hht_cookie_consent', choice); } catch (e) {}
+  var b = document.getElementById('hht-cookie-banner');
+  if (b) b.classList.remove('show');
+  if (choice === 'accepted' && typeof loadAnalytics === 'function') loadAnalytics();
+}
+(function(){
+  var c = null;
+  try { c = localStorage.getItem('hht_cookie_consent'); } catch (e) {}
+  if (!c) {
+    var b = document.getElementById('hht-cookie-banner');
+    if (b) b.classList.add('show');
+  }
+})();
+</script>
 </body></html>

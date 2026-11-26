@@ -1,7 +1,7 @@
 /* Hyderabad Home Tutors — service worker (PWA shell cache, v1).
    Caches only the same-origin app shell. Never caches Firebase / Google API
    calls, the AI chatbot backend, or analytics — those always go to network. */
-var CACHE = "hht-shell-v4";
+var CACHE = "hht-shell-v5";
 var PRECACHE = [
   "/",
   "/index.html",

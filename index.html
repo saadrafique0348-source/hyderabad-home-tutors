@@ -1,14 +1,20 @@
 <!doctype html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5WFPNY04N4"></script>
+<!-- Google Analytics loads only after the visitor accepts cookies (see the cookie banner at the end of the page). -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-5WFPNY04N4');
+  function loadAnalytics(){
+    if (window.__gaLoaded) return; window.__gaLoaded = true;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-5WFPNY04N4';
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    gtag('config', 'G-5WFPNY04N4');
+  }
+  try { if (localStorage.getItem('hht_cookie_consent') === 'accepted') loadAnalytics(); } catch (e) {}
 </script>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -1262,6 +1268,7 @@
           <li><a href="/blog.html">Blog</a></li>
           <li><a href="/disclaimer.html">Disclaimer</a></li>
           <li><a href="/cookie-policy.html">Cookie Policy</a></li>
+          <li><a href="#" onclick="localStorage.removeItem('hht_cookie_consent');location.reload();return false;">Cookie Settings</a></li>
         </ul>
       </div>
     </div>
@@ -3119,6 +3126,42 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/sw.js").catch(function () {});
   });
 }
+</script>
+<!-- Cookie consent banner (free, built into the site - no third-party plugin). -->
+<style>
+#hht-cookie-banner{position:fixed;left:0;right:0;bottom:0;z-index:9999;background:#03211b;color:#fff;padding:.9rem 1.1rem;display:none;box-shadow:0 -2px 12px rgba(0,0,0,.25)}
+#hht-cookie-banner.show{display:block}
+#hht-cookie-banner .hht-cb-inner{max-width:60rem;margin:0 auto;display:flex;flex-wrap:wrap;gap:.6rem .9rem;align-items:center;justify-content:space-between}
+#hht-cookie-banner p{margin:0;font-size:.9rem;line-height:1.5;flex:1 1 22rem}
+#hht-cookie-banner a{color:#f3d97a}
+#hht-cookie-banner .hht-cb-btns{display:flex;gap:.5rem;flex:none}
+#hht-cookie-banner button{cursor:pointer;border-radius:.5rem;padding:.5rem 1.1rem;font-size:.92rem;font-weight:700;border:1px solid #fff;background:transparent;color:#fff}
+#hht-cookie-banner button.hht-cb-accept{background:#c9a227;border-color:#c9a227;color:#03211b}
+</style>
+<div id="hht-cookie-banner" role="dialog" aria-label="Cookie consent">
+  <div class="hht-cb-inner">
+    <p>We use cookies to keep you signed in, count visits and show ads when displayed. Read our <a href="/cookie-policy.html">Cookie Policy</a>.</p>
+    <div class="hht-cb-btns">
+      <button type="button" class="hht-cb-accept" onclick="hhtCookieChoice('accepted')">Accept</button>
+      <button type="button" onclick="hhtCookieChoice('declined')">Decline</button>
+    </div>
+  </div>
+</div>
+<script>
+function hhtCookieChoice(choice){
+  try { localStorage.setItem('hht_cookie_consent', choice); } catch (e) {}
+  var b = document.getElementById('hht-cookie-banner');
+  if (b) b.classList.remove('show');
+  if (choice === 'accepted' && typeof loadAnalytics === 'function') loadAnalytics();
+}
+(function(){
+  var c = null;
+  try { c = localStorage.getItem('hht_cookie_consent'); } catch (e) {}
+  if (!c) {
+    var b = document.getElementById('hht-cookie-banner');
+    if (b) b.classList.add('show');
+  }
+})();
 </script>
 </body>
 </html>
